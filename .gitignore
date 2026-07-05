@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+*.tsbuildinfo
+storybook-static/
+
+# test
+coverage/
+
+# tooling caches
+.vite/
+.turbo/
+.eslintcache
+
+# env / local
+.env
+.env.*
+!.env.example
+
+# os / editor
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json

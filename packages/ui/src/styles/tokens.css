@@ -1,0 +1,98 @@
+/**
+ * TorisUI design tokens.
+ * Colors are stored as space-separated RGB triplets so consumers can
+ * compose alpha: `rgb(var(--tori-primary) / 0.4)`.
+ * Override any of these variables in your own :root to re-brand.
+ */
+:root {
+  color-scheme: light;
+
+  /* color */
+  --tori-bg: 255 255 255;
+  --tori-fg: 17 24 39;
+  --tori-muted: 107 114 128;
+  --tori-surface: 249 250 251;
+  --tori-surface-raised: 255 255 255;
+  --tori-border: 229 231 235;
+  --tori-primary: 124 58 237;
+  --tori-primary-strong: 109 40 217;
+  --tori-primary-fg: 255 255 255;
+  --tori-success: 5 150 105;
+  --tori-warning: 217 119 6;
+  --tori-danger: 220 38 38;
+  --tori-info: 37 99 235;
+
+  /* gradient accent */
+  --tori-gradient-primary: linear-gradient(
+    135deg,
+    rgb(var(--tori-primary)) 0%,
+    rgb(var(--tori-info)) 100%
+  );
+
+  /* soft glass */
+  --tori-glass-bg: rgb(255 255 255 / 0.62);
+  --tori-glass-border: rgb(255 255 255 / 0.45);
+  --tori-glass-blur: 16px;
+
+  /* radius */
+  --tori-radius-sm: 8px;
+  --tori-radius-md: 12px;
+  --tori-radius-lg: 16px;
+  --tori-radius-full: 9999px;
+
+  /* elevation */
+  --tori-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06), 0 1px 3px rgb(15 23 42 / 0.08);
+  --tori-shadow-md: 0 4px 12px rgb(15 23 42 / 0.08), 0 2px 4px rgb(15 23 42 / 0.05);
+  --tori-shadow-lg: 0 16px 40px rgb(15 23 42 / 0.14), 0 4px 12px rgb(15 23 42 / 0.08);
+  --tori-glow: 0 0 0 1px rgb(var(--tori-primary) / 0.4), 0 4px 24px rgb(var(--tori-primary) / 0.35);
+
+  /* motion */
+  --tori-motion-fast: 120ms;
+  --tori-motion-normal: 200ms;
+  --tori-motion-slow: 320ms;
+  --tori-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* typography */
+  --tori-font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR',
+    'Apple SD Gothic Neo', sans-serif;
+
+  /* focus */
+  --tori-focus-ring: 0 0 0 2px rgb(var(--tori-bg)), 0 0 0 4px rgb(var(--tori-primary) / 0.75);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --tori-bg: 8 8 12;
+  --tori-fg: 248 250 252;
+  --tori-muted: 148 163 184;
+  --tori-surface: 17 18 26;
+  --tori-surface-raised: 26 27 38;
+  --tori-border: 45 48 63;
+  --tori-primary: 167 139 250;
+  --tori-primary-strong: 139 92 246;
+  --tori-primary-fg: 24 16 44;
+  --tori-success: 52 211 153;
+  --tori-warning: 251 191 36;
+  --tori-danger: 248 113 113;
+  --tori-info: 96 165 250;
+
+  --tori-glass-bg: rgb(20 21 30 / 0.58);
+  --tori-glass-border: rgb(255 255 255 / 0.12);
+
+  --tori-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --tori-shadow-md: 0 4px 14px rgb(0 0 0 / 0.45);
+  --tori-shadow-lg: 0 18px 48px rgb(0 0 0 / 0.6);
+  --tori-glow: 0 0 0 1px rgb(var(--tori-primary) / 0.5), 0 4px 28px rgb(var(--tori-primary) / 0.45);
+}
+
+/* Kinetic interaction collapses to instant transitions when the user prefers reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  [data-theme='dark'] {
+    --tori-motion-fast: 0.01ms;
+    --tori-motion-normal: 0.01ms;
+    --tori-motion-slow: 0.01ms;
+  }
+}

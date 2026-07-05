@@ -1,0 +1,76 @@
+/* Shared base styles, utilities, and keyframes for TorisUI components. */
+
+[class^='tori-'],
+[class*=' tori-'] {
+  box-sizing: border-box;
+  font-family: var(--tori-font-sans);
+}
+
+.tori-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Every interactive TorisUI element shares the same visible focus treatment. */
+.tori-btn:focus-visible,
+.tori-input:focus-visible,
+.tori-switch:focus-visible,
+.tori-tabs__trigger:focus-visible,
+.tori-dialog__close:focus-visible,
+.tori-toast__close:focus-visible,
+.tori-card--interactive:focus-visible {
+  outline: none;
+  box-shadow: var(--tori-focus-ring);
+}
+
+@keyframes tori-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tori-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tori-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes tori-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class^='tori-'],
+  [class*=' tori-'] {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

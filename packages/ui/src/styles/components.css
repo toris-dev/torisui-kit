@@ -1,0 +1,664 @@
+/* ============================================================
+   Button
+   ============================================================ */
+.tori-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  border: 1px solid transparent;
+  border-radius: var(--tori-radius-md);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform var(--tori-motion-fast) var(--tori-ease),
+    box-shadow var(--tori-motion-normal) var(--tori-ease),
+    background-color var(--tori-motion-normal) var(--tori-ease),
+    border-color var(--tori-motion-normal) var(--tori-ease),
+    color var(--tori-motion-normal) var(--tori-ease);
+}
+
+.tori-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.tori-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+.tori-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.tori-btn--sm {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border-radius: var(--tori-radius-sm);
+}
+.tori-btn--md {
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+.tori-btn--lg {
+  height: 48px;
+  padding: 0 22px;
+  font-size: 16px;
+  border-radius: var(--tori-radius-lg);
+}
+.tori-btn--icon {
+  height: 40px;
+  width: 40px;
+  padding: 0;
+  font-size: 16px;
+}
+
+.tori-btn--solid {
+  background: rgb(var(--tori-primary));
+  color: rgb(var(--tori-primary-fg));
+  box-shadow: var(--tori-shadow-sm);
+}
+.tori-btn--solid:hover:not(:disabled) {
+  background: rgb(var(--tori-primary-strong));
+  box-shadow: var(--tori-shadow-md);
+}
+
+.tori-btn--soft {
+  background: rgb(var(--tori-primary) / 0.14);
+  color: rgb(var(--tori-primary));
+}
+.tori-btn--soft:hover:not(:disabled) {
+  background: rgb(var(--tori-primary) / 0.22);
+}
+
+.tori-btn--outline {
+  background: transparent;
+  border-color: rgb(var(--tori-border));
+  color: rgb(var(--tori-fg));
+}
+.tori-btn--outline:hover:not(:disabled) {
+  border-color: rgb(var(--tori-primary) / 0.6);
+  background: rgb(var(--tori-primary) / 0.06);
+}
+
+.tori-btn--ghost {
+  background: transparent;
+  color: rgb(var(--tori-fg));
+}
+.tori-btn--ghost:hover:not(:disabled) {
+  background: rgb(var(--tori-fg) / 0.07);
+}
+
+/* Brand gradient with a glow that intensifies on hover. */
+.tori-btn--glow {
+  background: var(--tori-gradient-primary);
+  background-size: 150% 150%;
+  background-position: 0% 50%;
+  color: rgb(255 255 255);
+  box-shadow: 0 2px 16px rgb(var(--tori-primary) / 0.35);
+  transition:
+    transform var(--tori-motion-fast) var(--tori-ease),
+    box-shadow var(--tori-motion-normal) var(--tori-ease),
+    background-position var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-btn--glow:hover:not(:disabled) {
+  background-position: 100% 50%;
+  box-shadow: var(--tori-glow);
+}
+
+.tori-btn--loading {
+  pointer-events: none;
+}
+.tori-btn__icon {
+  display: inline-flex;
+  align-items: center;
+}
+.tori-btn__spinner {
+  color: currentColor;
+}
+
+/* ============================================================
+   Spinner
+   ============================================================ */
+.tori-spinner {
+  display: inline-block;
+  border-radius: var(--tori-radius-full);
+  border: 2px solid rgb(var(--tori-primary) / 0.25);
+  border-top-color: rgb(var(--tori-primary));
+  animation: tori-spin 0.7s linear infinite;
+  color: rgb(var(--tori-primary));
+}
+.tori-btn .tori-spinner {
+  border-color: currentColor;
+  border-top-color: transparent;
+  opacity: 0.9;
+}
+.tori-spinner--sm {
+  width: 14px;
+  height: 14px;
+}
+.tori-spinner--md {
+  width: 20px;
+  height: 20px;
+}
+.tori-spinner--lg {
+  width: 28px;
+  height: 28px;
+  border-width: 3px;
+}
+
+/* ============================================================
+   Card
+   ============================================================ */
+.tori-card {
+  position: relative;
+  border-radius: var(--tori-radius-lg);
+  border: 1px solid rgb(var(--tori-border));
+  background: rgb(var(--tori-surface-raised));
+  color: rgb(var(--tori-fg));
+  padding: 20px;
+  transition:
+    transform var(--tori-motion-normal) var(--tori-ease),
+    box-shadow var(--tori-motion-normal) var(--tori-ease),
+    border-color var(--tori-motion-normal) var(--tori-ease);
+}
+
+.tori-card--elevated {
+  border-color: transparent;
+  box-shadow: var(--tori-shadow-md);
+}
+
+/* Soft-glass surface: translucent, blurred, subtle top highlight. */
+.tori-card--glass {
+  background: var(--tori-glass-bg);
+  border: 1px solid var(--tori-glass-border);
+  backdrop-filter: blur(var(--tori-glass-blur));
+  -webkit-backdrop-filter: blur(var(--tori-glass-blur));
+  box-shadow: var(--tori-shadow-sm);
+}
+.tori-card--glass::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  pointer-events: none;
+}
+
+.tori-card--interactive {
+  cursor: pointer;
+}
+.tori-card--interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--tori-shadow-lg);
+  border-color: rgb(var(--tori-primary) / 0.35);
+}
+.tori-card--interactive:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.tori-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.tori-card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+.tori-card__description {
+  margin: 0;
+  font-size: 14px;
+  color: rgb(var(--tori-muted));
+}
+.tori-card__content {
+  font-size: 14px;
+}
+.tori-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* ============================================================
+   Field / Input
+   ============================================================ */
+.tori-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tori-field__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(var(--tori-fg));
+}
+.tori-field__message {
+  margin: 0;
+  font-size: 12px;
+  color: rgb(var(--tori-muted));
+}
+.tori-field--error .tori-field__message {
+  color: rgb(var(--tori-danger));
+}
+
+.tori-input {
+  width: 100%;
+  border: 1px solid rgb(var(--tori-border));
+  border-radius: var(--tori-radius-md);
+  background: rgb(var(--tori-surface));
+  color: rgb(var(--tori-fg));
+  transition:
+    border-color var(--tori-motion-normal) var(--tori-ease),
+    box-shadow var(--tori-motion-normal) var(--tori-ease),
+    background-color var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-input::placeholder {
+  color: rgb(var(--tori-muted) / 0.8);
+}
+.tori-input:hover:not(:disabled) {
+  border-color: rgb(var(--tori-primary) / 0.4);
+}
+.tori-input:focus-visible {
+  border-color: rgb(var(--tori-primary));
+  background: rgb(var(--tori-bg));
+}
+.tori-input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.tori-input[aria-invalid='true'] {
+  border-color: rgb(var(--tori-danger));
+}
+.tori-input[aria-invalid='true']:focus-visible {
+  box-shadow: 0 0 0 2px rgb(var(--tori-bg)), 0 0 0 4px rgb(var(--tori-danger) / 0.6);
+}
+
+.tori-input--sm {
+  height: 32px;
+  padding: 0 10px;
+  font-size: 13px;
+  border-radius: var(--tori-radius-sm);
+}
+.tori-input--md {
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+.tori-input--lg {
+  height: 48px;
+  padding: 0 14px;
+  font-size: 16px;
+}
+
+/* ============================================================
+   Badge
+   ============================================================ */
+.tori-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--tori-radius-full);
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  --tori-badge-color: var(--tori-muted);
+}
+.tori-badge--primary {
+  --tori-badge-color: var(--tori-primary);
+}
+.tori-badge--success {
+  --tori-badge-color: var(--tori-success);
+}
+.tori-badge--warning {
+  --tori-badge-color: var(--tori-warning);
+}
+.tori-badge--danger {
+  --tori-badge-color: var(--tori-danger);
+}
+.tori-badge--info {
+  --tori-badge-color: var(--tori-info);
+}
+
+.tori-badge--solid {
+  background: rgb(var(--tori-badge-color));
+  color: rgb(var(--tori-bg));
+}
+.tori-badge--soft {
+  background: rgb(var(--tori-badge-color) / 0.14);
+  color: rgb(var(--tori-badge-color));
+}
+.tori-badge--outline {
+  border-color: rgb(var(--tori-badge-color) / 0.5);
+  color: rgb(var(--tori-badge-color));
+  background: transparent;
+}
+.tori-badge--gradient {
+  background: var(--tori-gradient-primary);
+  color: rgb(255 255 255);
+}
+
+.tori-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--tori-radius-full);
+  background: currentColor;
+}
+
+/* ============================================================
+   Switch
+   ============================================================ */
+.tori-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  border: 1px solid rgb(var(--tori-border));
+  border-radius: var(--tori-radius-full);
+  background: rgb(var(--tori-muted) / 0.3);
+  cursor: pointer;
+  padding: 2px;
+  transition:
+    background-color var(--tori-motion-normal) var(--tori-ease),
+    border-color var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-switch--md {
+  width: 44px;
+  height: 26px;
+}
+.tori-switch--sm {
+  width: 36px;
+  height: 22px;
+}
+.tori-switch__thumb {
+  display: block;
+  aspect-ratio: 1;
+  height: 100%;
+  border-radius: var(--tori-radius-full);
+  background: rgb(255 255 255);
+  box-shadow: var(--tori-shadow-sm);
+  transition: transform var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-switch[data-state='checked'] {
+  background: var(--tori-gradient-primary);
+  border-color: transparent;
+}
+.tori-switch--md[data-state='checked'] .tori-switch__thumb {
+  transform: translateX(18px);
+}
+.tori-switch--sm[data-state='checked'] .tori-switch__thumb {
+  transform: translateX(14px);
+}
+.tori-switch:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.tori-switch-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.tori-switch-field--disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.tori-switch-field__label {
+  font-size: 14px;
+  color: rgb(var(--tori-fg));
+}
+
+/* ============================================================
+   Dialog
+   ============================================================ */
+.tori-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: tori-fade-in var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-dialog {
+  position: relative;
+  width: 100%;
+  border-radius: var(--tori-radius-lg);
+  border: 1px solid var(--tori-glass-border);
+  background: rgb(var(--tori-surface-raised));
+  color: rgb(var(--tori-fg));
+  box-shadow: var(--tori-shadow-lg);
+  padding: 24px;
+  outline: none;
+  animation: tori-pop-in var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-dialog--sm {
+  max-width: 360px;
+}
+.tori-dialog--md {
+  max-width: 480px;
+}
+.tori-dialog--lg {
+  max-width: 640px;
+}
+.tori-dialog__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--tori-radius-sm);
+  background: transparent;
+  color: rgb(var(--tori-muted));
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--tori-motion-fast) var(--tori-ease);
+}
+.tori-dialog__close:hover {
+  background: rgb(var(--tori-fg) / 0.08);
+  color: rgb(var(--tori-fg));
+}
+.tori-dialog__title {
+  margin: 0 24px 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.tori-dialog__description {
+  margin: 0;
+  font-size: 14px;
+  color: rgb(var(--tori-muted));
+}
+.tori-dialog__body {
+  margin-top: 16px;
+  font-size: 14px;
+}
+.tori-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* ============================================================
+   Toast
+   ============================================================ */
+.tori-toast-viewport {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, calc(100vw - 40px));
+}
+.tori-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--tori-radius-md);
+  border: 1px solid var(--tori-glass-border);
+  border-left: 3px solid rgb(var(--tori-toast-accent, var(--tori-primary)));
+  background: var(--tori-glass-bg);
+  backdrop-filter: blur(var(--tori-glass-blur));
+  -webkit-backdrop-filter: blur(var(--tori-glass-blur));
+  color: rgb(var(--tori-fg));
+  box-shadow: var(--tori-shadow-md);
+  animation: tori-slide-in-right var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-toast--success {
+  --tori-toast-accent: var(--tori-success);
+}
+.tori-toast--error {
+  --tori-toast-accent: var(--tori-danger);
+}
+.tori-toast--info {
+  --tori-toast-accent: var(--tori-info);
+}
+.tori-toast--warning {
+  --tori-toast-accent: var(--tori-warning);
+}
+.tori-toast__content {
+  flex: 1;
+  min-width: 0;
+}
+.tori-toast__title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.tori-toast__description {
+  margin-top: 2px;
+  font-size: 13px;
+  color: rgb(var(--tori-muted));
+}
+.tori-toast__close {
+  border: none;
+  background: transparent;
+  color: rgb(var(--tori-muted));
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--tori-radius-sm);
+  padding: 2px 4px;
+}
+.tori-toast__close:hover {
+  color: rgb(var(--tori-fg));
+}
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+.tori-tabs__list {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--tori-radius-md);
+  background: rgb(var(--tori-fg) / 0.06);
+  border: 1px solid rgb(var(--tori-border) / 0.6);
+}
+.tori-tabs__trigger {
+  border: none;
+  background: transparent;
+  color: rgb(var(--tori-muted));
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--tori-radius-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--tori-motion-normal) var(--tori-ease),
+    color var(--tori-motion-normal) var(--tori-ease),
+    box-shadow var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-tabs__trigger:hover {
+  color: rgb(var(--tori-fg));
+}
+.tori-tabs__trigger[data-state='active'] {
+  background: rgb(var(--tori-surface-raised));
+  color: rgb(var(--tori-fg));
+  box-shadow: var(--tori-shadow-sm);
+}
+.tori-tabs__content {
+  margin-top: 12px;
+  font-size: 14px;
+  animation: tori-fade-in var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-tabs__content:focus-visible {
+  outline: none;
+  box-shadow: var(--tori-focus-ring);
+  border-radius: var(--tori-radius-sm);
+}
+
+/* ============================================================
+   Tooltip
+   ============================================================ */
+.tori-tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+.tori-tooltip {
+  position: absolute;
+  z-index: 80;
+  padding: 6px 10px;
+  border-radius: var(--tori-radius-sm);
+  background: rgb(var(--tori-fg));
+  color: rgb(var(--tori-bg));
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity var(--tori-motion-normal) var(--tori-ease),
+    transform var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-tooltip[data-open] {
+  opacity: 1;
+  transform: scale(1);
+}
+.tori-tooltip[data-placement='top'] {
+  bottom: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 0;
+}
+.tori-tooltip[data-placement='bottom'] {
+  top: calc(100% + 8px);
+  left: 50%;
+  translate: -50% 0;
+}
+.tori-tooltip[data-placement='left'] {
+  right: calc(100% + 8px);
+  top: 50%;
+  translate: 0 -50%;
+}
+.tori-tooltip[data-placement='right'] {
+  left: calc(100% + 8px);
+  top: 50%;
+  translate: 0 -50%;
+}
