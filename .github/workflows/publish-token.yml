@@ -1,6 +1,7 @@
 # Fallback release pipeline: classic NPM_TOKEN auth.
-# Disabled by default (manual trigger only) — use when Trusted Publishing
-# is not yet configured. Requires the NPM_TOKEN repository secret.
+# Manual trigger only — use when Trusted Publishing is not yet configured.
+# Requires the NPM_TOKEN secret, runs behind the same `npm` environment
+# gate as the OIDC pipeline, and refuses to publish from anything but main.
 name: Publish Package With Token
 
 on:
@@ -13,13 +14,15 @@ jobs:
   publish:
     name: Publish to npm with token
     runs-on: ubuntu-latest
+    environment: npm
+    if: github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
@@ -29,6 +32,10 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+
+      - name: Verify publish contents
+        working-directory: packages/ui
+        run: npm pack --dry-run
 
       - name: Publish to npm
         working-directory: packages/ui

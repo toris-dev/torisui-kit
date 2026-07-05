@@ -9,7 +9,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  /** Shows a spinner and disables interaction. */
+  /** Shows a spinner and disables interaction (also with `asChild`). */
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -28,6 +28,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     className,
     children,
     disabled,
+    onClick,
     ...props
   },
   ref,
@@ -40,7 +41,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     className,
   );
 
-  const content = (
+  const renderInner = (label: React.ReactNode) => (
     <>
       {loading ? (
         <Spinner size="sm" className="tori-btn__spinner" />
@@ -49,7 +50,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
           {leftIcon}
         </span>
       ) : null}
-      {children != null && <span className="tori-btn__label">{children}</span>}
+      {label != null && <span className="tori-btn__label">{label}</span>}
       {!loading && rightIcon ? (
         <span className="tori-btn__icon" aria-hidden>
           {rightIcon}
@@ -58,15 +59,29 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     </>
   );
 
-  if (asChild) {
+  if (asChild && React.isValidElement(children)) {
+    const child = children as React.ReactElement<{ children?: React.ReactNode }>;
+    const blocked = Boolean(disabled || loading);
     return (
       <Slot
         ref={ref as React.Ref<HTMLElement>}
         className={classes}
         aria-busy={loading || undefined}
+        aria-disabled={blocked || undefined}
+        data-disabled={blocked || undefined}
+        onClick={(event: React.MouseEvent<HTMLElement>) => {
+          // Non-button elements have no native disabled semantics —
+          // block activation (incl. keyboard Enter on links) here.
+          if (blocked) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
+          onClick?.(event as React.MouseEvent<HTMLButtonElement>);
+        }}
         {...props}
       >
-        {children as React.ReactElement}
+        {React.cloneElement(child, undefined, renderInner(child.props.children))}
       </Slot>
     );
   }
@@ -78,9 +93,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       className={classes}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
+      onClick={onClick}
       {...props}
     >
-      {content}
+      {renderInner(children)}
     </button>
   );
 });

@@ -22,12 +22,19 @@
   --tori-danger: 220 38 38;
   --tori-info: 37 99 235;
 
+  /* on-color foregrounds for bright tone surfaces (readable in both themes) */
+  --tori-success-fg: 2 33 23;
+  --tori-warning-fg: 41 25 2;
+
   /* gradient accent */
   --tori-gradient-primary: linear-gradient(
     135deg,
     rgb(var(--tori-primary)) 0%,
     rgb(var(--tori-info)) 100%
   );
+  /* text color on top of the gradient — dark theme supplies a dark value
+     because the gradient endpoints lighten there */
+  --tori-gradient-fg: 255 255 255;
 
   /* soft glass */
   --tori-glass-bg: rgb(255 255 255 / 0.62);
@@ -77,6 +84,8 @@
   --tori-warning: 251 191 36;
   --tori-danger: 248 113 113;
   --tori-info: 96 165 250;
+
+  --tori-gradient-fg: 24 16 44;
 
   --tori-glass-bg: rgb(20 21 30 / 0.58);
   --tori-glass-border: rgb(255 255 255 / 0.12);

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cx } from '../utils/cx';
+import { useEscapeKey } from '../hooks/use-escape-key';
 
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
@@ -14,9 +15,19 @@ export interface TooltipProps {
 
 /**
  * Lightweight CSS-positioned tooltip. Shows on hover and keyboard focus,
- * hides on Escape. The trigger gets `aria-describedby` while visible.
+ * hides on Escape. The bubble is only mounted while open, and the trigger
+ * gets `aria-describedby` (composed with any existing value) while visible.
+ *
+ * Positioning is pure CSS — there is no viewport collision handling. For
+ * tooltips near screen edges choose an appropriate `placement`.
  */
-export function Tooltip({ content, children, placement = 'top', delay = 300, className }: TooltipProps) {
+export function Tooltip({
+  content,
+  children,
+  placement = 'top',
+  delay = 300,
+  className,
+}: TooltipProps) {
   const [open, setOpen] = React.useState(false);
   const timerRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const tooltipId = React.useId();
@@ -25,24 +36,19 @@ export function Tooltip({ content, children, placement = 'top', delay = 300, cla
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => setOpen(true), delay);
   };
-  const hide = () => {
+  const hide = React.useCallback(() => {
     clearTimeout(timerRef.current);
     setOpen(false);
-  };
+  }, []);
 
   React.useEffect(() => () => clearTimeout(timerRef.current), []);
+  useEscapeKey(open, hide);
 
-  React.useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') hide();
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [open]);
-
+  const childDescribedBy = (children.props as { 'aria-describedby'?: string })[
+    'aria-describedby'
+  ];
   const trigger = React.cloneElement(children, {
-    'aria-describedby': open ? tooltipId : undefined,
+    'aria-describedby': open ? cx(childDescribedBy, tooltipId) : childDescribedBy,
   } as React.HTMLAttributes<HTMLElement>);
 
   return (
@@ -54,15 +60,11 @@ export function Tooltip({ content, children, placement = 'top', delay = 300, cla
       onBlurCapture={hide}
     >
       {trigger}
-      <span
-        id={tooltipId}
-        role="tooltip"
-        data-placement={placement}
-        data-open={open || undefined}
-        className="tori-tooltip"
-      >
-        {content}
-      </span>
+      {open && (
+        <span id={tooltipId} role="tooltip" data-placement={placement} className="tori-tooltip">
+          {content}
+        </span>
+      )}
     </span>
   );
 }

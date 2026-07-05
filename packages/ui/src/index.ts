@@ -34,7 +34,12 @@ export type { SwitchProps } from './components/switch';
 export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 
-export { ToastProvider, useToast } from './components/toast';
+export {
+  ToastProvider,
+  useToast,
+  DEFAULT_TOAST_DURATION,
+  ERROR_TOAST_DURATION,
+} from './components/toast';
 export type {
   ToastProviderProps,
   ToastOptions,
@@ -56,13 +61,14 @@ export { Tooltip } from './components/tooltip';
 export type { TooltipProps, TooltipPlacement } from './components/tooltip';
 
 // Primitives
-export { Slot } from './primitives/slot';
+export { Slot, composeRefs } from './primitives/slot';
 export type { SlotProps } from './primitives/slot';
 export { Portal } from './primitives/portal';
 export type { PortalProps } from './primitives/portal';
 export { VisuallyHidden } from './primitives/visually-hidden';
 export type { VisuallyHiddenProps } from './primitives/visually-hidden';
 
-// Utilities
+// Utilities & hooks
 export { cx } from './utils/cx';
 export { useControllableState } from './hooks/use-controllable-state';
+export { useEscapeKey } from './hooks/use-escape-key';

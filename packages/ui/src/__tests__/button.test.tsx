@@ -51,4 +51,55 @@ describe('Button', () => {
     expect(link).toHaveAttribute('href', '/docs');
     expect(link).toHaveClass('tori-btn', 'tori-btn--outline');
   });
+
+  it('renders spinner and icons with asChild', () => {
+    const { rerender } = render(
+      <Button asChild leftIcon={<svg data-testid="icon" />}>
+        <a href="/x">Go</a>
+      </Button>,
+    );
+    expect(screen.getByTestId('icon')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Go' })).toBeInTheDocument();
+
+    rerender(
+      <Button asChild loading>
+        <a href="/x">Go</a>
+      </Button>,
+    );
+    expect(screen.getByRole('status')).toBeInTheDocument();
+  });
+
+  it('blocks activation with asChild while loading', async () => {
+    const user = userEvent.setup({ pointerEventsCheck: 0 });
+    const onClick = vi.fn();
+    render(
+      <Button asChild loading onClick={onClick}>
+        <a href="/x">Go</a>
+      </Button>,
+    );
+
+    const link = screen.getByRole('link', { name: /Go/ });
+    expect(link).toHaveAttribute('aria-disabled', 'true');
+    expect(link).toHaveAttribute('aria-busy', 'true');
+
+    await user.click(link);
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('composes its onClick with the child element handler via asChild', async () => {
+    const user = userEvent.setup();
+    const buttonHandler = vi.fn();
+    const childHandler = vi.fn((event: React.MouseEvent) => event.preventDefault());
+    render(
+      <Button asChild onClick={buttonHandler}>
+        <a href="/x" onClick={childHandler}>
+          Go
+        </a>
+      </Button>,
+    );
+
+    await user.click(screen.getByRole('link', { name: 'Go' }));
+    expect(childHandler).toHaveBeenCalledTimes(1);
+    expect(buttonHandler).toHaveBeenCalledTimes(1);
+  });
 });

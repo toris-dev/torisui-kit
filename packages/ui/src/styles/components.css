@@ -31,9 +31,15 @@
   transform: translateY(0) scale(0.98);
 }
 
-.tori-btn:disabled {
+.tori-btn:disabled,
+.tori-btn[data-disabled] {
   cursor: not-allowed;
   opacity: 0.55;
+}
+/* asChild (non-button) elements have no :disabled — block pointer input via CSS,
+   keyboard activation is blocked in the component. */
+.tori-btn[data-disabled] {
+  pointer-events: none;
 }
 
 .tori-btn--sm {
@@ -101,7 +107,7 @@
   background: var(--tori-gradient-primary);
   background-size: 150% 150%;
   background-position: 0% 50%;
-  color: rgb(255 255 255);
+  color: rgb(var(--tori-gradient-fg));
   box-shadow: 0 2px 16px rgb(var(--tori-primary) / 0.35);
   transition:
     transform var(--tori-motion-fast) var(--tori-ease),
@@ -246,7 +252,7 @@
 }
 .tori-field__message {
   margin: 0;
-  font-size: 12px;
+  font-size: 13px;
   color: rgb(var(--tori-muted));
 }
 .tori-field--error .tori-field__message {
@@ -265,7 +271,7 @@
     background-color var(--tori-motion-normal) var(--tori-ease);
 }
 .tori-input::placeholder {
-  color: rgb(var(--tori-muted) / 0.8);
+  color: rgb(var(--tori-muted));
 }
 .tori-input:hover:not(:disabled) {
   border-color: rgb(var(--tori-primary) / 0.4);
@@ -338,6 +344,14 @@
   background: rgb(var(--tori-badge-color));
   color: rgb(var(--tori-bg));
 }
+/* Bright tone surfaces need a fixed dark foreground to stay readable
+   at 12px in light mode (white-on-amber fails WCAG 4.5:1). */
+.tori-badge--solid.tori-badge--warning {
+  color: rgb(var(--tori-warning-fg));
+}
+.tori-badge--solid.tori-badge--success {
+  color: rgb(var(--tori-success-fg));
+}
 .tori-badge--soft {
   background: rgb(var(--tori-badge-color) / 0.14);
   color: rgb(var(--tori-badge-color));
@@ -349,7 +363,7 @@
 }
 .tori-badge--gradient {
   background: var(--tori-gradient-primary);
-  color: rgb(255 255 255);
+  color: rgb(var(--tori-gradient-fg));
 }
 
 .tori-badge__dot {
@@ -461,13 +475,13 @@
 }
 .tori-dialog__close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: none;
   border-radius: var(--tori-radius-sm);
   background: transparent;
@@ -556,6 +570,12 @@
   color: rgb(var(--tori-muted));
 }
 .tori-toast__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
   border: none;
   background: transparent;
   color: rgb(var(--tori-muted));
@@ -563,7 +583,7 @@
   line-height: 1;
   cursor: pointer;
   border-radius: var(--tori-radius-sm);
-  padding: 2px 4px;
+  margin: -4px -6px -4px 0;
 }
 .tori-toast__close:hover {
   color: rgb(var(--tori-fg));
@@ -608,7 +628,8 @@
   animation: tori-fade-in var(--tori-motion-normal) var(--tori-ease);
 }
 .tori-tabs__content:focus-visible {
-  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--tori-focus-ring);
   border-radius: var(--tori-radius-sm);
 }
@@ -620,6 +641,7 @@
   position: relative;
   display: inline-flex;
 }
+/* The bubble is only in the DOM while open — it animates in on mount. */
 .tori-tooltip {
   position: absolute;
   z-index: 80;
@@ -629,18 +651,12 @@
   color: rgb(var(--tori-bg));
   font-size: 12px;
   font-weight: 500;
-  line-height: 1.3;
-  white-space: nowrap;
+  line-height: 1.4;
+  width: max-content;
+  max-width: min(280px, calc(100vw - 16px));
+  white-space: normal;
   pointer-events: none;
-  opacity: 0;
-  transform: scale(0.96);
-  transition:
-    opacity var(--tori-motion-normal) var(--tori-ease),
-    transform var(--tori-motion-normal) var(--tori-ease);
-}
-.tori-tooltip[data-open] {
-  opacity: 1;
-  transform: scale(1);
+  animation: tori-fade-in var(--tori-motion-normal) var(--tori-ease);
 }
 .tori-tooltip[data-placement='top'] {
   bottom: calc(100% + 8px);

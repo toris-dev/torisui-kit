@@ -1,94 +1,118 @@
-# 엔지니어링 하네스
+# Engineering Harness
 
-이 문서는 TorisUI Kit의 **품질을 기계적으로 보장하는 장치들**(하네스)을 정의합니다.
-"사람이 조심하는 것"이 아니라 "도구가 막아주는 것"이 원칙입니다.
+This document defines the **machinery that guarantees quality** in TorisUI Kit.
+The principle: tools block mistakes; humans don't have to remember to be careful.
 
-## 한눈에 보기
+## At a glance
 
 ```txt
-로컬:  pnpm verify  =  lint → typecheck → test → build
-PR/CI: .github/workflows/ci.yml  (동일 게이트 + npm pack --dry-run)
-배포:  GitHub Release 발행 → publish.yml → 게이트 재실행 → npm publish (OIDC)
-안전망: prepublishOnly, files 필드, exports 제한, publishConfig.access
+Local:  pnpm verify  =  lint → typecheck → test → build
+PR/CI:  .github/workflows/ci.yml  (same gate + package-content verification)
+Release: GitHub Release → publish.yml → gates re-run → npm publish (OIDC)
+Safety rails: prepublishOnly, files field, exports restriction, publishConfig.access,
+              SHA-pinned actions, environment gate, tag/version assertion
 ```
 
-## 1. 품질 게이트
+## 1. Quality gates
 
-로컬과 CI가 **완전히 동일한** 4단계 게이트를 사용합니다.
+Local and CI run **exactly the same** four-stage gate.
 
-| 단계 | 명령 | 도구 | 잡는 것 |
+| Stage | Command | Tool | Catches |
 | --- | --- | --- | --- |
-| Lint | `pnpm lint` | ESLint 9 flat config + typescript-eslint + react-hooks | 훅 규칙 위반, 미사용 변수, 타입 import 일관성 |
-| Typecheck | `pnpm typecheck` | `tsc --noEmit` (strict, `noUncheckedIndexedAccess`) | 타입 오류, 인덱스 접근 실수 |
-| Test | `pnpm test` | vitest + @testing-library/react (jsdom) | 동작·접근성·키보드 인터랙션 회귀 |
-| Build | `pnpm build` | tsup + build-css.mjs | 번들/타입 선언 생성 실패, CSS 누락 |
+| Lint | `pnpm lint` | ESLint 9 flat config + typescript-eslint + react-hooks | hook violations, unused vars, type-import consistency |
+| Typecheck | `pnpm typecheck` | `tsc --noEmit` (strict, `noUncheckedIndexedAccess`) | type errors, unsafe index access |
+| Test | `pnpm test` | vitest + @testing-library/react (jsdom) | behavior/a11y/keyboard regressions |
+| Build | `pnpm build` | tsup + build-css.mjs | bundle/declaration failures, missing CSS |
 
-`pnpm verify` 하나로 전부 실행됩니다. **PR 전 필수.**
+`pnpm verify` runs all of it. **Required before every PR.**
 
-### 테스트 전략
+### Testing strategy
 
-- 위치: `packages/ui/src/__tests__/*.test.tsx`
-- 원칙: 구현이 아닌 **접근성 계약**을 테스트한다 — `getByRole`, `aria-*` 검증 중심
-  - 예: Switch는 `role="switch"` + `aria-checked`, Tabs는 화살표 키 이동, Dialog는 Escape 닫기
-- vitest `globals: true`는 Testing Library의 **자동 cleanup에 필수** — 끄면 렌더가 누적되어 테스트가 오염됨
-- 인터랙션은 `fireEvent`가 아닌 `@testing-library/user-event` 사용
+- Location: `packages/ui/src/__tests__/*.test.tsx`
+- Principle: test the **accessibility contract**, not the implementation —
+  `getByRole` and `aria-*` assertions first
+  - e.g. Switch asserts `role="switch"` + `aria-checked`; Tabs asserts arrow-key
+    navigation; Dialog asserts Escape/overlay/alertdialog semantics
+- vitest `globals: true` is **required for Testing Library auto-cleanup** —
+  turning it off makes renders leak across tests
+- Interactions use `@testing-library/user-event`, not `fireEvent` — with one
+  exception: timer-driven components (Tooltip) use fake timers + `fireEvent`,
+  because user-event's internal awaits deadlock against fake timers
+- Timer behavior (toast auto-dismiss, tooltip delay) is tested with `vi.useFakeTimers()`
 
 ## 2. CI (.github/workflows/ci.yml)
 
-트리거: 모든 PR + `main` push. 순서:
+Triggers: every PR + pushes to `main`. Order:
 
 ```txt
 checkout → pnpm/action-setup → setup-node(24, pnpm cache)
 → pnpm install --frozen-lockfile
 → lint → typecheck → test → build
-→ npm pack --dry-run   # 배포 tarball 내용물 검증
+→ npm pack --dry-run --json + required-file assertion
 ```
 
-주의점:
+Notes:
 
-- **pnpm/action-setup이 setup-node보다 먼저** 와야 pnpm store 캐시가 동작합니다 (기획서 초안의 순서 버그를 수정함).
-- pnpm 버전은 workflow에 하드코딩하지 않고 루트 `package.json`의 `packageManager` 필드에서 읽습니다 — 버전 단일 관리.
-- `--frozen-lockfile`로 lockfile 불일치를 CI에서 차단.
+- **pnpm/action-setup must precede setup-node** for the pnpm store cache to work.
+- The pnpm version comes from the `packageManager` field — one source of truth.
+- `--frozen-lockfile` blocks lockfile drift in CI.
+- The pack step **fails** if any required artifact (`dist/index.js`, `dist/index.cjs`,
+  both `.d.ts` flavors, `dist/styles.css`, README, LICENSE) is missing — it is an
+  assertion, not a log line.
 
-## 3. 배포 하네스
+## 3. Supply-chain & publish hardening
 
-상세 절차는 [release.md](./release.md) 참고. 하네스 관점 요약:
+The publish pipeline can mint an npm OIDC token, so it gets extra rails:
 
-- **publish.yml** (기본): GitHub Release 발행 시에만 실행. npm **Trusted Publishing(OIDC)** — 장기 토큰 없음. `environment: npm` + `id-token: write`. 배포 직전에 4단계 게이트 + `npm pack --dry-run`을 다시 실행.
-- **publish-token.yml** (fallback): `NPM_TOKEN` 시크릿 기반. 실수 실행을 막기 위해 `workflow_dispatch`(수동)로만 트리거.
-- **prepublishOnly**: 로컬에서 `npm publish`를 직접 치더라도 lint/typecheck/test/build가 강제 실행됨.
+- **Actions pinned to commit SHAs** (`actions/checkout@df4cb1c… # v6`) in all
+  workflows. A re-pointed tag on a third-party action cannot inject code.
+  When bumping, update the SHA and the trailing version comment together.
+- **`environment: npm` gate on both publish workflows** (OIDC and token fallback).
+  Create the environment in repo Settings → Environments and add required
+  reviewers + deployment branch/tag rules — referencing a nonexistent
+  environment auto-creates it with no protection.
+- **Tag/version assertion**: publish.yml fails if the release tag doesn't equal
+  `v<packages/ui/package.json version>` — no accidental version mismatches.
+- **Token fallback is manual-only** (`workflow_dispatch`) and refuses to run
+  from any ref but `main`.
+- **Lifecycle scripts are restricted**: root `package.json` sets
+  `pnpm.onlyBuiltDependencies: ["esbuild"]`, so arbitrary transitive
+  dependencies can't run install scripts in CI.
+- **prepublishOnly**: even a manual `npm publish` re-runs lint/typecheck/test/build.
 
-### 패키지 오염 방지
+### Package containment
 
-- `files: ["dist", "README.md", "LICENSE"]` — 소스·테스트·설정 파일은 tarball에서 원천 배제
-- `exports` 필드 — 소비자가 접근 가능한 경로를 `.`과 `./styles.css`로 제한
-- `publishConfig.access: public` — scoped 패키지 공개 배포 명시
-- CI의 `npm pack --dry-run` — 포함 파일 목록이 PR 로그에 항상 남음
+- `files: ["dist", "README.md", "LICENSE"]` — sources, tests, and configs never ship
+- `exports` limits consumers to `.` and `./styles.css`, with per-condition types
+  (`index.d.ts` for import, `index.d.cts` for require)
+- `publishConfig.access: public` declared for the scoped package
+- CI's pack assertion keeps the file list visible in every PR log
 
-## 4. 버저닝 하네스 (Changesets)
+## 4. Versioning harness (Changesets)
 
-- 기능/수정 PR에는 `pnpm changeset`으로 semver 수준 + 요약을 기록
-- 릴리즈 시 `pnpm changeset version`이 버전 범프 + CHANGELOG 생성을 자동화
-- `apps/docs`(torisui-docs)는 `.changeset/config.json`의 `ignore`에 등록 — 버저닝 제외
+- Feature/fix PRs include `pnpm changeset` output (semver level + summary)
+- `pnpm changeset version` bumps versions and generates CHANGELOGs
+- `apps/docs` (torisui-docs) is in `.changeset/config.json` `ignore` — never versioned
 
-## 5. 컴포넌트 품질 기준 (Definition of Done)
+## 5. Component quality bar (Definition of Done)
 
-새 컴포넌트는 아래를 모두 만족해야 merge 가능:
+A new component must satisfy all of these to merge:
 
-- [ ] TypeScript Props 타입 export
-- [ ] `forwardRef` 지원 (합리적인 경우)
-- [ ] `className` 확장 가능, 네이티브 props 전달
-- [ ] 상태형 컴포넌트는 controlled/uncontrolled 모두 지원 (`useControllableState`)
-- [ ] 스타일은 `--tori-*` 토큰만 사용 (하드코딩 색상 금지) → 다크 모드 자동 대응
-- [ ] focus-visible 스타일 (base.css 공용 셀렉터에 추가)
-- [ ] 모션은 `--tori-motion-*` 토큰 사용 → reduced-motion 자동 대응
-- [ ] 키보드 내비게이션 + 적절한 ARIA role/속성
-- [ ] `src/__tests__/`에 동작 테스트 (역할 기반 쿼리)
-- [ ] `apps/docs` 플레이그라운드에 데모 추가
-- [ ] `src/index.ts`에 export + `pnpm verify` 통과
+- [ ] TypeScript prop types exported
+- [ ] `forwardRef` support (where sensible)
+- [ ] `className` extension, native props pass-through
+- [ ] Stateful components support controlled **and** uncontrolled (`useControllableState`)
+- [ ] Styles use `--tori-*` tokens only (no hardcoded colors) → dark mode for free
+- [ ] focus-visible styling (add to the shared selector list in base.css)
+- [ ] Motion uses `--tori-motion-*` tokens → reduced-motion for free
+- [ ] Keyboard navigation + correct ARIA roles/attributes
+- [ ] Behavior tests in `src/__tests__/` (role-based queries)
+- [ ] Demo added to the `apps/docs` playground
+- [ ] Exported from `src/index.ts` + `pnpm verify` passes
 
-## 6. 로컬 개발 규칙
+## 6. Local development rules
 
-- 커밋 prefix: `feat / fix / style / refactor / docs / test / chore`
-- 브랜치: `main`(안정) / `feat/*` / `fix/*` / `release/*`
-- 포맷: Prettier (`pnpm format`). CI 게이트는 아니지만 PR 전 실행 권장
+- Commit prefixes: `feat / fix / style / refactor / docs / test / chore`
+- Branches: `main` (stable) / `feat/*` / `fix/*` / `release/*`
+- All documentation and code comments are written in English
+- Formatting: Prettier (`pnpm format`). Not a CI gate, but run it before PRs

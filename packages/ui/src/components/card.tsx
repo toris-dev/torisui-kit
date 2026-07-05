@@ -6,7 +6,11 @@ export type CardVariant = 'surface' | 'glass' | 'elevated';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant;
-  /** Adds hover/press affordances for clickable cards. */
+  /**
+   * Adds hover/press affordances for clickable cards. When rendered as a
+   * plain div (no `asChild`), the card also becomes keyboard-accessible:
+   * `role="button"`, `tabIndex={0}`, and Enter/Space activation.
+   */
   interactive?: boolean;
   asChild?: boolean;
 }
@@ -30,8 +34,25 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(function Card(
     );
   }
 
+  // A clickable div is invisible to keyboard and screen-reader users —
+  // give interactive cards button semantics unless the consumer overrides.
+  const interactiveProps: React.HTMLAttributes<HTMLDivElement> = interactive
+    ? {
+        role: props.role ?? 'button',
+        tabIndex: props.tabIndex ?? 0,
+        onKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => {
+          props.onKeyDown?.(event);
+          if (event.defaultPrevented) return;
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            event.currentTarget.click();
+          }
+        },
+      }
+    : {};
+
   return (
-    <div ref={ref} className={classes} {...props}>
+    <div ref={ref} className={classes} {...props} {...interactiveProps}>
       {children}
     </div>
   );
@@ -45,11 +66,12 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardSectionProps>(
   },
 );
 
-export const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  function CardTitle({ className, ...props }, ref) {
-    return <h3 ref={ref} className={cx('tori-card__title', className)} {...props} />;
-  },
-);
+export const CardTitle = React.forwardRef<
+  HTMLHeadingElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(function CardTitle({ className, ...props }, ref) {
+  return <h3 ref={ref} className={cx('tori-card__title', className)} {...props} />;
+});
 
 export const CardDescription = React.forwardRef<
   HTMLParagraphElement,

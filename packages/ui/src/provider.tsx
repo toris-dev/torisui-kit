@@ -15,11 +15,16 @@ const ToriThemeContext = React.createContext<ToriThemeContextValue | null>(null)
 
 export interface ToriProviderProps {
   children?: React.ReactNode;
-  /** Initial theme. Defaults to 'system'. */
+  /**
+   * Theme to apply. Defaults to 'system'. Changing this prop overrides
+   * the current theme, including any earlier `setTheme()` call.
+   */
   theme?: ToriTheme;
   /**
    * Element that receives the `data-theme` attribute.
-   * Defaults to `document.documentElement`.
+   * Defaults to `document.documentElement`. Use a scoped target when
+   * mounting more than one ToriProvider on a page — multiple providers
+   * writing to the same element will overwrite each other.
    */
   target?: HTMLElement | null;
 }
@@ -32,6 +37,11 @@ function resolveSystemTheme(): 'light' | 'dark' {
 /**
  * Root provider for TorisUI. Applies the theme via `data-theme` and
  * mounts the toast system so `useToast()` works anywhere below it.
+ *
+ * SSR note: the theme attribute is applied in an effect, so
+ * server-rendered pages briefly paint with the server default. To avoid
+ * a dark-mode flash, set `data-theme` in a pre-hydration inline script
+ * (see docs/theming.md).
  */
 export function ToriProvider({ children, theme: themeProp = 'system', target }: ToriProviderProps) {
   const [theme, setTheme] = React.useState<ToriTheme>(themeProp);
@@ -45,9 +55,15 @@ export function ToriProvider({ children, theme: themeProp = 'system', target }: 
   React.useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return;
     const query = window.matchMedia('(prefers-color-scheme: dark)');
-    const listener = (event: MediaQueryListEvent) => setSystemTheme(event.matches ? 'dark' : 'light');
-    query.addEventListener('change', listener);
-    return () => query.removeEventListener('change', listener);
+    const listener = (event: MediaQueryListEvent) =>
+      setSystemTheme(event.matches ? 'dark' : 'light');
+    // Safari < 14 only implements the deprecated addListener API.
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', listener);
+      return () => query.removeEventListener('change', listener);
+    }
+    query.addListener(listener);
+    return () => query.removeListener(listener);
   }, []);
 
   const resolvedTheme = theme === 'system' ? systemTheme : theme;

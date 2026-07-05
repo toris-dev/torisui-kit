@@ -1,9 +1,23 @@
 import * as React from 'react';
 import { cx } from '../utils/cx';
 import { Portal } from '../primitives/portal';
+import { useEscapeKey } from '../hooks/use-escape-key';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+// Stacked-dialog bookkeeping: only the top-most dialog reacts to Escape,
+// and the body scroll lock is reference-counted so closing an inner
+// dialog doesn't unlock scrolling behind an outer one.
+const dialogStack: symbol[] = [];
+let scrollLockCount = 0;
+let previousBodyOverflow = '';
+
+function getFocusable(panel: HTMLElement): HTMLElement[] {
+  return Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+    (el) => !el.closest('[hidden]') && el.getAttribute('aria-hidden') !== 'true',
+  );
+}
 
 export interface DialogProps {
   open: boolean;
@@ -49,46 +63,52 @@ function DialogContent({
   className,
 }: DialogProps) {
   const panelRef = React.useRef<HTMLDivElement>(null);
+  const stackIdRef = React.useRef<symbol | null>(null);
+  if (stackIdRef.current === null) stackIdRef.current = Symbol('tori-dialog');
+  const stackId = stackIdRef.current;
   const titleId = React.useId();
   const descriptionId = React.useId();
   const dismissOnOverlay = closeOnOverlayClick ?? role !== 'alertdialog';
 
   const close = React.useCallback(() => onOpenChange?.(false), [onOpenChange]);
 
-  // Focus management + scroll lock for the lifetime of the dialog.
+  // Focus management + ref-counted scroll lock for the dialog's lifetime.
   React.useEffect(() => {
+    dialogStack.push(stackId);
+    if (scrollLockCount === 0) {
+      previousBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+    }
+    scrollLockCount++;
+
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const panel = panelRef.current;
     const autofocus = panel?.querySelector<HTMLElement>('[data-autofocus]');
     (autofocus ?? panel)?.focus();
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
     return () => {
-      document.body.style.overflow = previousOverflow;
+      const index = dialogStack.indexOf(stackId);
+      if (index !== -1) dialogStack.splice(index, 1);
+      scrollLockCount--;
+      if (scrollLockCount === 0) document.body.style.overflow = previousBodyOverflow;
       previouslyFocused?.focus?.();
     };
-  }, []);
+  }, [stackId]);
 
-  // Escape works no matter where focus currently is.
-  React.useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.stopPropagation();
-        close();
-      }
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [close]);
+  // Escape closes only the top-most dialog and respects defaultPrevented
+  // (e.g. an open combobox inside the dialog handles Escape first).
+  useEscapeKey(true, (event) => {
+    if (event.defaultPrevented) return;
+    if (dialogStack[dialogStack.length - 1] !== stackId) return;
+    close();
+  });
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key !== 'Tab') return;
     // Minimal focus trap: cycle within the panel.
     const panel = panelRef.current;
     if (!panel) return;
-    const focusable = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE));
+    const focusable = getFocusable(panel);
     if (focusable.length === 0) {
       event.preventDefault();
       return;

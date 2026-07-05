@@ -1,11 +1,11 @@
-# 시작 가이드
+# Getting Started
 
-## 요구 사항
+## Requirements
 
-- Node.js ≥ 20 (CI는 24 사용)
-- pnpm 9.x (`packageManager` 필드로 고정: `pnpm@9.14.2`)
+- Node.js ≥ 20 (CI uses 24)
+- pnpm 9.x (pinned via the `packageManager` field: `pnpm@9.14.2`)
 
-## 셋업
+## Setup
 
 ```bash
 git clone https://github.com/toris-dev/torisui-kit.git
@@ -13,32 +13,33 @@ cd torisui-kit
 pnpm install
 ```
 
-## 자주 쓰는 명령어
+## Common commands
 
-| 명령어 | 설명 |
+| Command | Description |
 | --- | --- |
-| `pnpm verify` | lint + typecheck + test + build 전체 게이트 (PR 전 필수) |
-| `pnpm lint` | ESLint (루트 flat config, 전체 워크스페이스) |
-| `pnpm typecheck` | 모든 패키지 `tsc --noEmit` |
-| `pnpm test` | vitest 단위/인터랙션 테스트 |
-| `pnpm build` | 모든 패키지 빌드 (ui: tsup + styles.css 번들) |
-| `pnpm --filter torisui-docs dev` | 플레이그라운드 dev 서버 (localhost:5173) |
-| `pnpm --filter @toris-dev/ui test:watch` | 테스트 watch 모드 |
-| `pnpm changeset` | 릴리즈 노트/버전 범프 기록 |
-| `pnpm format` | Prettier 포맷 |
+| `pnpm verify` | lint + typecheck + test + build — the full gate (required before PRs) |
+| `pnpm lint` | ESLint (single root flat config, whole workspace) |
+| `pnpm typecheck` | `tsc --noEmit` in every package |
+| `pnpm test` | vitest unit/interaction tests |
+| `pnpm build` | build all packages (ui: tsup + styles.css bundle) |
+| `pnpm --filter torisui-docs dev` | playground dev server (localhost:5173) |
+| `pnpm --filter @toris-dev/ui test:watch` | tests in watch mode |
+| `pnpm changeset` | record a release note / version bump |
+| `pnpm format` | Prettier |
 
-## 플레이그라운드 (apps/docs)
+## Playground (apps/docs)
 
-`apps/docs`는 Vite 기반 데모 앱으로, 모든 컴포넌트의 variant/상태를 한 화면에서 확인합니다.
+`apps/docs` is a Vite demo app that shows every component variant and state on one page.
 
-- 라이브러리를 **dist가 아니라 소스로 alias** 하므로 (`vite.config.ts`), `packages/ui/src`를 수정하면 즉시 HMR 반영됩니다.
-- 실제 소비자용 import 경로는 `@toris-dev/ui` + `@toris-dev/ui/styles.css` 입니다 (README 참고).
+- The library is **aliased to source** (not dist) in `vite.config.ts`, so edits
+  under `packages/ui/src` hot-reload instantly.
+- Real consumers import `@toris-dev/ui` + `@toris-dev/ui/styles.css` (see the README).
 
-## 새 컴포넌트 추가 절차
+## Adding a new component
 
-1. `packages/ui/src/components/<name>.tsx` 작성 — [harness.md](./harness.md)의 품질 기준 준수
-2. `packages/ui/src/styles/components.css`에 `tori-<name>` 스타일 추가 (토큰만 사용)
-3. `packages/ui/src/index.ts`에 컴포넌트 + Props 타입 export
-4. `packages/ui/src/__tests__/<name>.test.tsx` 테스트 작성
-5. `apps/docs/src/App.tsx`에 데모 섹션 추가
-6. `pnpm verify` 통과 확인 → `pnpm changeset`으로 변경 기록 → PR
+1. Create `packages/ui/src/components/<name>.tsx` — follow the quality bar in [harness.md](./harness.md)
+2. Add `tori-<name>` styles to `packages/ui/src/styles/components.css` (tokens only)
+3. Export the component + prop types from `packages/ui/src/index.ts`
+4. Write tests in `packages/ui/src/__tests__/<name>.test.tsx`
+5. Add a demo section to `apps/docs/src/App.tsx`
+6. Run `pnpm verify` → record the change with `pnpm changeset` → open a PR

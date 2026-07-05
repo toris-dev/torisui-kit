@@ -22,4 +22,18 @@ describe('Input', () => {
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByRole('alert')).toHaveTextContent('Invalid email address');
   });
+
+  it('error takes precedence over helper text', () => {
+    render(<Input label="Email" error="Bad" helperText="Help" />);
+    expect(screen.getByRole('alert')).toHaveTextContent('Bad');
+    expect(screen.queryByText('Help')).not.toBeInTheDocument();
+  });
+
+  it('does not treat an empty-string error as invalid', () => {
+    render(<Input label="Email" error="" helperText="hint" />);
+    const input = screen.getByLabelText('Email');
+    expect(input).not.toHaveAttribute('aria-invalid');
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(screen.getByText('hint')).toBeInTheDocument();
+  });
 });

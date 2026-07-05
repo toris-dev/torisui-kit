@@ -10,6 +10,8 @@ export interface SwitchProps
   size?: 'sm' | 'md';
   /** Visible label rendered next to the control. */
   label?: React.ReactNode;
+  /** Class applied to the outer `<label>` wrapper (only rendered when `label` is set). */
+  wrapperClassName?: string;
 }
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
@@ -20,6 +22,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
     size = 'md',
     label,
     className,
+    wrapperClassName,
     disabled,
     onClick,
     ...props
@@ -39,11 +42,11 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
       role="switch"
       aria-checked={isChecked}
       data-state={isChecked ? 'checked' : 'unchecked'}
-      className={cx('tori-switch', `tori-switch--${size}`, label == null ? className : undefined)}
+      className={cx('tori-switch', `tori-switch--${size}`, className)}
       disabled={disabled}
       onClick={(event) => {
         onClick?.(event);
-        if (!event.defaultPrevented) setChecked(!isChecked);
+        if (!event.defaultPrevented) setChecked((prev) => !prev);
       }}
       {...props}
     >
@@ -54,7 +57,13 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(function 
   if (label == null) return control;
 
   return (
-    <label className={cx('tori-switch-field', disabled && 'tori-switch-field--disabled', className)}>
+    <label
+      className={cx(
+        'tori-switch-field',
+        disabled && 'tori-switch-field--disabled',
+        wrapperClassName,
+      )}
+    >
       {control}
       <span className="tori-switch-field__label">{label}</span>
     </label>

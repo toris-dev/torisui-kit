@@ -24,7 +24,13 @@ import {
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const dark = resolvedTheme === 'dark';
-  return <Switch checked={dark} onCheckedChange={(next) => setTheme(next ? 'dark' : 'light')} label={dark ? 'Dark' : 'Light'} />;
+  return (
+    <Switch
+      checked={dark}
+      onCheckedChange={(next) => setTheme(next ? 'dark' : 'light')}
+      label={dark ? 'Dark' : 'Light'}
+    />
+  );
 }
 
 function Showcase() {
@@ -32,7 +38,7 @@ function Showcase() {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const emailError =
-    email.length > 0 && !email.includes('@') ? '올바른 이메일 형식이 아닙니다.' : undefined;
+    email.length > 0 && !email.includes('@') ? 'Please enter a valid email address.' : undefined;
 
   return (
     <main className="playground">
@@ -71,6 +77,9 @@ function Showcase() {
           <Badge tone="danger" variant="solid">
             Error
           </Badge>
+          <Badge tone="warning" variant="solid">
+            Degraded
+          </Badge>
           <Badge tone="info" variant="outline">
             Beta
           </Badge>
@@ -87,23 +96,27 @@ function Showcase() {
           <Card variant="surface">
             <CardHeader>
               <CardTitle>Surface</CardTitle>
-              <CardDescription>기본 서피스 카드</CardDescription>
+              <CardDescription>The default surface card</CardDescription>
             </CardHeader>
-            <CardContent>토큰 기반 배경과 보더를 사용합니다.</CardContent>
+            <CardContent>Uses token-driven background and border.</CardContent>
           </Card>
-          <Card variant="glass" interactive>
+          <Card
+            variant="glass"
+            interactive
+            onClick={() => toast.info('Card activated — works with Enter/Space too.')}
+          >
             <CardHeader>
               <CardTitle>Glass · Interactive</CardTitle>
-              <CardDescription>Soft-glass + hover 인터랙션</CardDescription>
+              <CardDescription>Soft-glass + hover interaction</CardDescription>
             </CardHeader>
-            <CardContent>블러 서피스와 은은한 하이라이트.</CardContent>
+            <CardContent>Blurred surface, subtle highlight, keyboard-accessible.</CardContent>
           </Card>
           <Card variant="elevated">
             <CardHeader>
               <CardTitle>Elevated</CardTitle>
-              <CardDescription>그림자 기반 깊이감</CardDescription>
+              <CardDescription>Depth through shadows</CardDescription>
             </CardHeader>
-            <CardContent>보더 없이 그림자로 띄웁니다.</CardContent>
+            <CardContent>Floats on a shadow instead of a border.</CardContent>
           </Card>
         </div>
       </section>
@@ -112,14 +125,14 @@ function Showcase() {
         <h2>Input</h2>
         <div className="playground__grid">
           <Input
-            label="이메일"
+            label="Email"
             placeholder="you@example.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             error={emailError}
-            helperText="로그인에 사용할 이메일"
+            helperText="Used for signing in"
           />
-          <Input label="비활성" placeholder="Disabled" disabled />
+          <Input label="Disabled" placeholder="Disabled" disabled />
         </div>
       </section>
 
@@ -131,8 +144,8 @@ function Showcase() {
             <TabsTrigger value="props">Props</TabsTrigger>
             <TabsTrigger value="a11y">A11y</TabsTrigger>
           </TabsList>
-          <TabsContent value="overview">화살표 키로 탭 사이를 이동할 수 있습니다.</TabsContent>
-          <TabsContent value="props">variant, size 등 props 문서가 들어갑니다.</TabsContent>
+          <TabsContent value="overview">Use arrow keys to move between tabs.</TabsContent>
+          <TabsContent value="props">Props documentation (variant, size, …) goes here.</TabsContent>
           <TabsContent value="a11y">role=tablist/tab/tabpanel + roving tabindex.</TabsContent>
         </Tabs>
       </section>
@@ -143,43 +156,45 @@ function Showcase() {
           <Button variant="outline" onClick={() => setDialogOpen(true)}>
             Open dialog
           </Button>
-          <Button variant="soft" onClick={() => toast.success('저장되었습니다.')}>
+          <Button variant="soft" onClick={() => toast.success('Saved successfully.')}>
             Success toast
           </Button>
           <Button
             variant="soft"
             onClick={() =>
               toast.promise(new Promise((resolve) => setTimeout(resolve, 1500)), {
-                loading: '배포 중…',
-                success: '배포 완료!',
-                error: '배포 실패',
+                loading: 'Deploying…',
+                success: 'Deployed!',
+                error: 'Deploy failed',
               })
             }
           >
             Promise toast
           </Button>
-          <Tooltip content="브랜드 그라디언트 버튼">
+          <Tooltip content="Brand gradient button with a kinetic glow on hover">
             <Button variant="glow">Hover me</Button>
           </Tooltip>
         </div>
         <Dialog
           open={dialogOpen}
           onOpenChange={setDialogOpen}
-          title="프로젝트 삭제"
-          description="이 작업은 되돌릴 수 없습니다."
+          role="alertdialog"
+          title="Delete project"
+          description="This action cannot be undone."
           footer={
             <>
               <Button variant="ghost" onClick={() => setDialogOpen(false)}>
-                취소
+                Cancel
               </Button>
               <Button
                 variant="solid"
+                data-autofocus
                 onClick={() => {
                   setDialogOpen(false);
-                  toast.error('삭제되었습니다.');
+                  toast.error('Project deleted.');
                 }}
               >
-                삭제
+                Delete
               </Button>
             </>
           }

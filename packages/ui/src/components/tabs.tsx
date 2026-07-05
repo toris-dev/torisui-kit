@@ -16,6 +16,11 @@ function useTabsContext(component: string): TabsContextValue {
   return context;
 }
 
+/** Tab values are interpolated into DOM ids — keep them id-safe. */
+function toIdSlug(value: string): string {
+  return value.replace(/[^a-zA-Z0-9_-]/g, '-');
+}
+
 export interface TabsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   value?: string;
   defaultValue?: string;
@@ -49,8 +54,26 @@ export function Tabs({
 
 export type TabsListProps = React.HTMLAttributes<HTMLDivElement>;
 
+/** Tabs directly owned by this list — excludes tabs of nested Tabs instances. */
+function getOwnTabs(list: HTMLDivElement | null): HTMLButtonElement[] {
+  if (!list) return [];
+  return Array.from(list.querySelectorAll<HTMLButtonElement>('[role="tab"]:not(:disabled)')).filter(
+    (tab) => tab.closest('[role="tablist"]') === list,
+  );
+}
+
 export function TabsList({ className, onKeyDown, ...props }: TabsListProps) {
   const listRef = React.useRef<HTMLDivElement>(null);
+
+  // Keyboard reachability net: when no tab is selected (e.g. no
+  // defaultValue), every trigger renders tabIndex=-1 — promote the first
+  // one so the tablist stays in the tab order.
+  React.useEffect(() => {
+    const tabs = getOwnTabs(listRef.current);
+    if (tabs.length > 0 && !tabs.some((tab) => tab.tabIndex === 0)) {
+      tabs[0]!.tabIndex = 0;
+    }
+  });
 
   // Roving focus with automatic activation (selection follows focus).
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -59,9 +82,7 @@ export function TabsList({ className, onKeyDown, ...props }: TabsListProps) {
     const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
     if (!keys.includes(event.key)) return;
 
-    const tabs = Array.from(
-      listRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]:not(:disabled)') ?? [],
-    );
+    const tabs = getOwnTabs(listRef.current);
     if (tabs.length === 0) return;
     const currentIndex = tabs.findIndex((tab) => tab === document.activeElement);
 
@@ -105,15 +126,16 @@ export const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>
   function TabsTrigger({ value, className, onClick, ...props }, ref) {
     const context = useTabsContext('TabsTrigger');
     const selected = context.value === value;
+    const slug = toIdSlug(value);
 
     return (
       <button
         ref={ref}
         type="button"
         role="tab"
-        id={`${context.baseId}-tab-${value}`}
+        id={`${context.baseId}-tab-${slug}`}
         aria-selected={selected}
-        aria-controls={`${context.baseId}-panel-${value}`}
+        aria-controls={`${context.baseId}-panel-${slug}`}
         tabIndex={selected ? 0 : -1}
         data-state={selected ? 'active' : 'inactive'}
         className={cx('tori-tabs__trigger', className)}
@@ -135,13 +157,14 @@ export const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
   function TabsContent({ value, className, ...props }, ref) {
     const context = useTabsContext('TabsContent');
     const selected = context.value === value;
+    const slug = toIdSlug(value);
 
     return (
       <div
         ref={ref}
         role="tabpanel"
-        id={`${context.baseId}-panel-${value}`}
-        aria-labelledby={`${context.baseId}-tab-${value}`}
+        id={`${context.baseId}-panel-${slug}`}
+        aria-labelledby={`${context.baseId}-tab-${slug}`}
         hidden={!selected}
         tabIndex={0}
         className={cx('tori-tabs__content', className)}

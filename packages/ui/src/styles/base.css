@@ -18,7 +18,11 @@
   border: 0;
 }
 
-/* Every interactive TorisUI element shares the same visible focus treatment. */
+/* Every interactive TorisUI element shares the same visible focus treatment.
+   The transparent outline (instead of `outline: none`) keeps a focus
+   indicator in Windows High Contrast / forced-colors mode, where
+   box-shadows are stripped and transparent outlines are repainted in the
+   system highlight color. */
 .tori-btn:focus-visible,
 .tori-input:focus-visible,
 .tori-switch:focus-visible,
@@ -26,7 +30,8 @@
 .tori-dialog__close:focus-visible,
 .tori-toast__close:focus-visible,
 .tori-card--interactive:focus-visible {
-  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   box-shadow: var(--tori-focus-ring);
 }
 
@@ -72,5 +77,12 @@
   [class*=' tori-'] {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* Progress indication is essential motion — a near-zero duration on an
+     infinite spin renders as per-frame flicker, which is worse for
+     motion-sensitive users. Slow it down instead of killing it. */
+  .tori-spinner {
+    animation-duration: 1.6s !important;
   }
 }

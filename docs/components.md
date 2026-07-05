@@ -1,11 +1,11 @@
-# 컴포넌트 API
+# Component API
 
-모든 컴포넌트 공통:
+Common to every component:
 
-- TypeScript Props 타입 export (`ButtonProps` 등)
-- `forwardRef` 지원, `className`으로 스타일 확장 가능
-- 네이티브 HTML 속성 전달 (`...props`)
-- 다크 모드·focus-visible·reduced-motion은 토큰/base 스타일이 자동 처리
+- TypeScript prop types are exported (`ButtonProps`, etc.)
+- `forwardRef` support; styles extend via `className`
+- Native HTML attributes pass through (`...props`)
+- Dark mode, focus-visible, and reduced-motion are handled by tokens/base styles
 
 ## Button
 
@@ -14,42 +14,50 @@
 <Button asChild variant="outline"><a href="/docs">Docs</a></Button>
 ```
 
-| Prop | 타입 | 기본값 |
+| Prop | Type | Default |
 | --- | --- | --- |
 | `variant` | `'solid' \| 'soft' \| 'outline' \| 'ghost' \| 'glow'` | `'solid'` |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'icon'` | `'md'` |
-| `loading` | `boolean` — 스피너 표시 + 클릭 차단 + `aria-busy` | `false` |
+| `loading` | `boolean` — spinner + blocked interaction + `aria-busy` | `false` |
 | `leftIcon` / `rightIcon` | `ReactNode` | — |
-| `asChild` | `boolean` — 자식 엘리먼트로 렌더 (링크 등) | `false` |
+| `asChild` | `boolean` — render the child element (links etc.) | `false` |
 
-`IconButton`은 `size="icon"` 고정 + `aria-label` 필수 버전입니다.
+`asChild` has full parity: spinner, icons, and label wrapping render inside the
+child element, and `loading`/`disabled` block activation via `aria-disabled` +
+click interception (non-button elements have no native `disabled`).
+
+`IconButton` is the `size="icon"` variant with a required `aria-label`.
 
 ## Card
 
 ```tsx
-<Card variant="glass" interactive>
+<Card variant="glass" interactive onClick={openDetail}>
   <CardHeader>
-    <CardTitle>제목</CardTitle>
-    <CardDescription>설명</CardDescription>
+    <CardTitle>Title</CardTitle>
+    <CardDescription>Description</CardDescription>
   </CardHeader>
-  <CardContent>내용</CardContent>
-  <CardFooter><Button>액션</Button></CardFooter>
+  <CardContent>Content</CardContent>
+  <CardFooter><Button>Action</Button></CardFooter>
 </Card>
 ```
 
-- `variant`: `'surface'`(기본 보더) · `'glass'`(블러 소프트글래스) · `'elevated'`(그림자)
-- `interactive`: hover 리프트/press 스케일 + focus ring
-- `asChild` 지원 (카드 전체를 링크로 만들 때)
+- `variant`: `'surface'` (default border) · `'glass'` (blurred soft-glass) · `'elevated'` (shadow)
+- `interactive`: hover lift / press scale + focus ring. When rendered as a plain
+  div it also gets `role="button"`, `tabIndex={0}`, and Enter/Space activation —
+  clickable cards stay keyboard-accessible. Override `role`/`tabIndex` to opt out.
+- `asChild` supported (e.g. make the whole card a link — then the child provides semantics)
 
 ## Input
 
 ```tsx
-<Input label="이메일" helperText="로그인용" error={errors.email} size="md" />
+<Input label="Email" helperText="Used for sign-in" error={errors.email} size="md" />
 ```
 
-- `error`가 있으면 `aria-invalid` + `role="alert"` 메시지로 전환 (helperText 대체)
-- label↔input은 자동 생성 id로 연결, 메시지는 `aria-describedby`로 연결
-- `size`: `'sm' | 'md' | 'lg'` (네이티브 `size` 속성은 제외됨)
+- A truthy `error` switches the field to invalid: `aria-invalid` + `role="alert"`
+  message (replacing `helperText`); empty string / `false` do not
+- label↔input are linked via a generated id; messages via `aria-describedby`
+- `size`: `'sm' | 'md' | 'lg'` (the native `size` attribute is omitted)
+- `wrapperClassName` styles the outer field wrapper
 
 ## Badge
 
@@ -58,27 +66,33 @@
 <Badge variant="gradient">New</Badge>
 ```
 
-- `variant`: `'solid' | 'soft' | 'outline' | 'gradient'` (기본 `soft`)
+- `variant`: `'solid' | 'soft' | 'outline' | 'gradient'` (default `soft`)
 - `tone`: `'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info'`
-- `dot`: 상태 점 표시
+- `dot`: renders a status dot
+- Solid warning/success and gradient badges use dedicated foreground tokens
+  (`--tori-warning-fg`, `--tori-success-fg`, `--tori-gradient-fg`) to keep
+   12px text at WCAG 4.5:1 in both themes
 
 ## Spinner
 
 ```tsx
-<Spinner size="lg" label="불러오는 중" />
+<Spinner size="lg" label="Loading data" />
 ```
 
-`role="status"` + 시각적으로 숨긴 label로 스크린리더에 안내됩니다.
+`role="status"` plus a visually-hidden label announces loading to screen readers.
+Under reduced motion the spin is slowed, not frozen (a near-zero infinite spin flickers).
 
 ## Switch
 
 ```tsx
-<Switch label="다크 모드" defaultChecked onCheckedChange={setDark} />
+<Switch label="Dark mode" defaultChecked onCheckedChange={setDark} />
 <Switch checked={value} onCheckedChange={setValue} />  {/* controlled */}
 ```
 
-- `role="switch"` + `aria-checked`, Space/Enter 키보드 토글
-- `checked`(controlled) / `defaultChecked`(uncontrolled) 모두 지원
+- `role="switch"` + `aria-checked`, Space/Enter keyboard toggle
+- Both `checked` (controlled) and `defaultChecked` (uncontrolled) supported
+- `className` always styles the switch control; `wrapperClassName` styles the
+  `<label>` wrapper (mirrors the Input convention)
 
 ## Dialog
 
@@ -86,43 +100,50 @@
 <Dialog
   open={open}
   onOpenChange={setOpen}
-  title="프로젝트 삭제"
-  description="이 작업은 되돌릴 수 없습니다."
-  footer={<Button onClick={confirm}>삭제</Button>}
+  title="Delete project"
+  description="This cannot be undone."
+  footer={<Button onClick={confirm}>Delete</Button>}
   role="alertdialog"
 />
 ```
 
-- Escape·오버레이 클릭·닫기 버튼 → `onOpenChange(false)` 호출 (상태는 부모 소유)
-- 열릴 때 패널로 포커스 이동(`[data-autofocus]` 우선), 닫히면 원래 위치로 복원
-- Tab 포커스 트랩 + body 스크롤 잠금
-- `role="alertdialog"`이면 오버레이 클릭 닫기가 기본 비활성화
+- Escape / overlay click / close button → `onOpenChange(false)` (state lives in the parent)
+- On open, focus moves into the panel (`[data-autofocus]` wins); on close it returns
+- Tab focus trap + **ref-counted** body scroll lock (stacked dialogs unlock only
+  when the last one closes)
+- With stacked dialogs, Escape closes only the **top-most** one, and it respects
+  `event.defaultPrevented` from inner widgets
+- `role="alertdialog"` disables overlay-click dismissal by default
 
 ## Toast
 
 ```tsx
-const { toast, dismiss } = useToast(); // ToriProvider 내부에서만
+const { toast, dismiss } = useToast(); // inside ToriProvider only
 
-toast({ title: '저장됨', description: '변경 사항이 반영되었습니다.' });
-toast.success('저장되었습니다.');
-toast.error('실패했습니다.', { duration: 6000 });
+toast({ title: 'Saved', description: 'Your changes are live.' });
+toast.success('Saved!');
+toast.error('Something failed.', { duration: 6000 });
 await toast.promise(deploy(), {
-  loading: '배포 중…',
-  success: '배포 완료!',
-  error: (e) => `실패: ${String(e)}`,
+  loading: 'Deploying…',
+  success: 'Deployed!',
+  error: (e) => `Failed: ${String(e)}`,
 });
 ```
 
-- tone: `default | success | error | info | warning` (error는 `role="alert"`)
-- `duration: 0`이면 수동 dismiss까지 유지, 기본 4000ms
-- `ToriProvider`가 viewport를 자동 마운트 (우하단, 최대 5개)
+- Tones: `default | success | error | info | warning` (error uses `role="alert"`)
+- `duration: 0` keeps a toast until manually dismissed; default is
+  `DEFAULT_TOAST_DURATION` (4000ms, exported)
+- Hovering or focusing a toast pauses its timer; leaving restarts the full duration
+- Over the `limit` (default 5), the oldest **dismissible** toasts are evicted first —
+  a pending `toast.promise` toast survives and can still resolve
+- `ToriProvider` mounts the viewport automatically (bottom-right)
 
 ## Tabs
 
 ```tsx
 <Tabs defaultValue="overview" onValueChange={track}>
-  <TabsList aria-label="문서 섹션">
-    <TabsTrigger value="overview">개요</TabsTrigger>
+  <TabsList aria-label="Doc sections">
+    <TabsTrigger value="overview">Overview</TabsTrigger>
     <TabsTrigger value="api">API</TabsTrigger>
   </TabsList>
   <TabsContent value="overview">…</TabsContent>
@@ -130,25 +151,34 @@ await toast.promise(deploy(), {
 </Tabs>
 ```
 
-- WAI-ARIA tabs 패턴: `tablist/tab/tabpanel`, roving tabindex
-- ←/→/Home/End 키 이동(선택이 포커스를 따라가는 automatic activation), 끝에서 순환
+- WAI-ARIA tabs pattern: `tablist/tab/tabpanel`, roving tabindex
+- ←/→/Home/End with wrap-around; selection follows focus (automatic activation)
+- Keyboard navigation is scoped to the owning tablist — nested `Tabs` instances don't interfere
+- When nothing is selected, the first trigger stays keyboard-reachable
+- `value` strings are slugged for DOM ids, so values with spaces are safe;
+  values must be unique within one `Tabs`
 
 ## Tooltip
 
 ```tsx
-<Tooltip content="브랜드 그라디언트" placement="bottom" delay={200}>
+<Tooltip content="Brand gradient" placement="bottom" delay={200}>
   <Button variant="glow">Hover</Button>
 </Tooltip>
 ```
 
-- hover + 키보드 포커스에서 표시, Escape로 닫힘
-- 표시 중 트리거에 `aria-describedby` 연결
-- `placement`: `top | bottom | left | right` (CSS 포지셔닝)
+- Shows on hover + keyboard focus, hides on Escape
+- The bubble is mounted **only while open** (no hidden DOM cost per tooltip)
+- `aria-describedby` is composed with any existing value on the trigger
+- `placement`: `top | bottom | left | right` — pure CSS positioning, no viewport
+  collision handling; content wraps at `max-width: 280px`
 
-## Primitives
+## Primitives & hooks
 
-- `Slot` — 부모 props를 단일 자식에 병합 (`asChild` 구현체)
-- `Portal` — SSR-safe `document.body` 렌더링
-- `VisuallyHidden` — 스크린리더 전용 텍스트
-- `cx(...classes)` — 클래스 조합 유틸
-- `useControllableState` — controlled/uncontrolled 패턴 훅
+- `Slot` — merges parent props onto a single child (the `asChild` engine).
+  Event handlers compose (child first, then slot); refs chain via `composeRefs`
+- `Portal` — SSR-safe `document.body` rendering
+- `VisuallyHidden` — screen-reader-only text
+- `cx(...classes)` — class name joiner
+- `composeRefs(...refs)` — merge callback/object refs
+- `useControllableState` — controlled/uncontrolled state with updater-function support
+- `useEscapeKey(active, handler)` — document-level Escape handling for overlays
