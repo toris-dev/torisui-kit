@@ -61,6 +61,12 @@
   }
 }
 
+@keyframes tori-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
 @keyframes tori-slide-in-right {
   from {
     opacity: 0;
@@ -84,5 +90,11 @@
      motion-sensitive users. Slow it down instead of killing it. */
   .tori-spinner {
     animation-duration: 1.6s !important;
+  }
+
+  /* The class-based kill switch doesn't reach pseudo-elements —
+     stop the skeleton shimmer explicitly (a static block reads fine). */
+  .tori-skeleton::after {
+    animation: none !important;
   }
 }

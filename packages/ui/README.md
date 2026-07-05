@@ -30,8 +30,10 @@ export default function App() {
 
 ## Components
 
-Button · IconButton · Card · Input · Badge · Spinner · Switch · Dialog · Toast (`useToast`) · Tabs · Tooltip
-plus primitives: Slot · Portal · VisuallyHidden.
+Button · IconButton · Card · Input · Textarea · Select · Checkbox · Badge ·
+Avatar · Spinner · Skeleton · Switch · Dialog · Toast (`useToast`) · Tabs · Tooltip
+plus primitives: Slot · Portal · VisuallyHidden and hooks:
+`useControllableState` · `useEscapeKey`.
 
 ## Theming
 

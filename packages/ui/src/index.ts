@@ -22,11 +22,26 @@ export type { CardProps, CardVariant, CardSectionProps } from './components/card
 export { Input } from './components/input';
 export type { InputProps, InputSize } from './components/input';
 
+export { Textarea } from './components/textarea';
+export type { TextareaProps } from './components/textarea';
+
+export { Select } from './components/select';
+export type { SelectProps, SelectSize } from './components/select';
+
+export { Checkbox } from './components/checkbox';
+export type { CheckboxProps } from './components/checkbox';
+
 export { Badge } from './components/badge';
 export type { BadgeProps, BadgeVariant, BadgeTone } from './components/badge';
 
+export { Avatar } from './components/avatar';
+export type { AvatarProps, AvatarSize, AvatarStatus } from './components/avatar';
+
 export { Spinner } from './components/spinner';
 export type { SpinnerProps } from './components/spinner';
+
+export { Skeleton } from './components/skeleton';
+export type { SkeletonProps, SkeletonVariant } from './components/skeleton';
 
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch';

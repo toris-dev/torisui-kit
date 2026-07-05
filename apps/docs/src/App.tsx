@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Avatar,
   Badge,
   Button,
   Card,
@@ -7,14 +8,18 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Checkbox,
   Dialog,
   Input,
+  Select,
+  Skeleton,
   Spinner,
   Switch,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
+  Textarea,
   Tooltip,
   ToriProvider,
   useTheme,
@@ -68,7 +73,7 @@ function Showcase() {
       </section>
 
       <section>
-        <h2>Badge & Spinner</h2>
+        <h2>Badge · Spinner · Avatar · Skeleton</h2>
         <div className="playground__row">
           <Badge tone="primary">Primary</Badge>
           <Badge tone="success" dot>
@@ -80,13 +85,24 @@ function Showcase() {
           <Badge tone="warning" variant="solid">
             Degraded
           </Badge>
-          <Badge tone="info" variant="outline">
-            Beta
-          </Badge>
           <Badge variant="gradient">Gradient</Badge>
-          <Spinner size="sm" />
           <Spinner size="md" />
-          <Spinner size="lg" />
+          <Avatar name="Toris Dev" status="online" />
+          <Avatar name="Ada Lovelace" size="lg" status="busy" />
+          <Avatar src="https://avatars.githubusercontent.com/u/66780368?v=4" name="toris-dev" size="lg" />
+        </div>
+        <div className="playground__grid" style={{ marginTop: 16 }}>
+          <Card>
+            <div className="playground__row">
+              <Skeleton variant="circle" width={40} height={40} />
+              <div style={{ flex: 1 }}>
+                <Skeleton variant="text" lines={2} />
+              </div>
+            </div>
+          </Card>
+          <Card>
+            <Skeleton variant="rect" height={72} />
+          </Card>
         </div>
       </section>
 
@@ -122,7 +138,7 @@ function Showcase() {
       </section>
 
       <section>
-        <h2>Input</h2>
+        <h2>Form controls</h2>
         <div className="playground__grid">
           <Input
             label="Email"
@@ -132,7 +148,18 @@ function Showcase() {
             error={emailError}
             helperText="Used for signing in"
           />
-          <Input label="Disabled" placeholder="Disabled" disabled />
+          <Select label="Role" placeholder="Choose a role" helperText="Sets default permissions">
+            <option value="admin">Admin</option>
+            <option value="editor">Editor</option>
+            <option value="viewer">Viewer</option>
+          </Select>
+          <Textarea label="Bio" placeholder="Tell us about yourself" helperText="Max 200 characters" />
+          <div className="playground__row" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+            <Checkbox label="Accept terms" description="Required to create an account" defaultChecked />
+            <Checkbox label="Subscribe to updates" />
+            <Checkbox label="Select all" indeterminate />
+            <Checkbox label="Disabled" disabled />
+          </div>
         </div>
       </section>
 

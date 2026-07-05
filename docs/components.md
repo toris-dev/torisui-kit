@@ -182,3 +182,64 @@ await toast.promise(deploy(), {
 - `composeRefs(...refs)` — merge callback/object refs
 - `useControllableState` — controlled/uncontrolled state with updater-function support
 - `useEscapeKey(active, handler)` — document-level Escape handling for overlays
+
+## Textarea
+
+```tsx
+<Textarea label="Bio" rows={5} helperText="Max 200 characters" error={errors.bio} />
+```
+
+Shares the Input field scaffolding (label / helper / error / `wrapperClassName`)
+and the `tori-input` visual style; `resize: vertical`, height driven by `rows`.
+
+## Select
+
+```tsx
+<Select label="Fruit" placeholder="Pick one" error={errors.fruit}>
+  <option value="apple">Apple</option>
+  <option value="banana">Banana</option>
+</Select>
+```
+
+- Styled **native** `<select>` — keyboard, screen-reader, and mobile behavior for free
+- `placeholder` renders as a hidden disabled option (uncontrolled mode starts on it;
+  in controlled mode pass `value=""` to show it)
+- `size`: `'sm' | 'md' | 'lg'`; same field scaffolding as Input
+- A searchable Combobox is planned as a separate component
+
+## Checkbox
+
+```tsx
+<Checkbox label="Accept terms" description="Required to continue" onCheckedChange={setAgreed} />
+<Checkbox indeterminate label="Select all" />
+```
+
+- Real `<input type="checkbox">` underneath — controlled (`checked`) and
+  uncontrolled (`defaultChecked`) come from the platform
+- `onCheckedChange(boolean)` convenience callback (native `onChange` also fires)
+- `indeterminate` sets the native mixed state (announced as "mixed")
+- Gradient check styling, focus ring on the box, `wrapperClassName` for the label wrapper
+
+## Avatar
+
+```tsx
+<Avatar src="/me.png" name="Toris Dev" size="lg" status="online" />
+<Avatar name="Ada Lovelace" />  {/* initials fallback: AL */}
+```
+
+- Falls back to initials (first letters of the first two words) when `src` is
+  missing or fails to load; the fallback exposes `role="img"` + the name
+- `size`: `'sm' | 'md' | 'lg' | 'xl'`; `status`: `online | offline | busy | away`
+  (dot with a screen-reader label)
+
+## Skeleton
+
+```tsx
+<Skeleton variant="text" lines={3} />
+<Skeleton variant="circle" width={64} height={64} />
+<Skeleton variant="rect" height={160} />
+```
+
+- Purely decorative (`aria-hidden`) — announce loading state via `Spinner` or a live region
+- `variant="text"` with `lines` renders a stack with a shorter last line
+- Shimmer stops under `prefers-reduced-motion` (static block remains)

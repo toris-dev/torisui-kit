@@ -49,15 +49,18 @@ pnpm --filter @toris-dev/ui test:watch  # component tests in watch mode
 pnpm changeset                          # record a version bump / release note
 ```
 
-## Components (MVP)
+## Components
 
 | Component | Status | Notes |
 | --- | --- | --- |
 | Button / IconButton | ✅ | solid·soft·outline·ghost·glow, loading, icons, `asChild` (full parity) |
 | Card | ✅ | surface·glass·elevated; `interactive` is keyboard-accessible |
-| Input | ✅ | label, helper, error, full ARIA wiring |
+| Input / Textarea | ✅ | shared field scaffolding: label, helper, error, full ARIA wiring |
+| Select | ✅ | styled native select, placeholder option, field scaffolding |
+| Checkbox | ✅ | native input underneath, indeterminate, description line |
 | Badge | ✅ | solid·soft·outline·gradient × 6 tones, WCAG-checked foregrounds |
-| Spinner | ✅ | sm/md/lg, screen-reader label, reduced-motion safe |
+| Avatar | ✅ | image with initials fallback, 4 sizes, status dot |
+| Spinner / Skeleton | ✅ | loading states; reduced-motion safe shimmer |
 | Switch | ✅ | controlled/uncontrolled, keyboard, `wrapperClassName` |
 | Dialog | ✅ | focus trap, stacked-dialog Escape, ref-counted scroll lock |
 | Toast | ✅ | success/error/info/warning/promise, hover-pause, smart eviction |

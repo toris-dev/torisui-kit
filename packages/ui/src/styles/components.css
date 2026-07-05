@@ -678,3 +678,251 @@
   top: 50%;
   translate: 0 -50%;
 }
+
+/* ============================================================
+   Textarea
+   ============================================================ */
+.tori-textarea {
+  min-height: 80px;
+  height: auto;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* ============================================================
+   Select (styled native)
+   ============================================================ */
+.tori-select {
+  position: relative;
+  display: block;
+}
+.tori-select__native {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  cursor: pointer;
+}
+.tori-select__chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  translate: 0 -50%;
+  display: inline-flex;
+  color: rgb(var(--tori-muted));
+  pointer-events: none;
+  transition: color var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-select:hover .tori-select__chevron {
+  color: rgb(var(--tori-fg));
+}
+
+/* ============================================================
+   Checkbox
+   ============================================================ */
+.tori-checkbox {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+/* The real input covers the box — native semantics, invisible skin. */
+.tori-checkbox__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.tori-checkbox__input:disabled {
+  cursor: not-allowed;
+}
+.tori-checkbox__box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  border: 1px solid rgb(var(--tori-border));
+  background: rgb(var(--tori-surface));
+  color: transparent;
+  pointer-events: none;
+  transition:
+    background-color var(--tori-motion-normal) var(--tori-ease),
+    border-color var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-checkbox__check {
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity var(--tori-motion-fast) var(--tori-ease),
+    transform var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-checkbox__dash {
+  display: none;
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgb(var(--tori-gradient-fg));
+}
+.tori-checkbox__input:hover:not(:disabled) + .tori-checkbox__box {
+  border-color: rgb(var(--tori-primary) / 0.6);
+}
+.tori-checkbox__input:focus-visible + .tori-checkbox__box {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--tori-focus-ring);
+}
+.tori-checkbox__input:checked + .tori-checkbox__box {
+  background: var(--tori-gradient-primary);
+  border-color: transparent;
+  color: rgb(var(--tori-gradient-fg));
+}
+.tori-checkbox__input:checked + .tori-checkbox__box .tori-checkbox__check {
+  opacity: 1;
+  transform: scale(1);
+}
+.tori-checkbox__input:indeterminate + .tori-checkbox__box {
+  background: var(--tori-gradient-primary);
+  border-color: transparent;
+}
+.tori-checkbox__input:indeterminate + .tori-checkbox__box .tori-checkbox__check {
+  opacity: 0;
+}
+.tori-checkbox__input:indeterminate + .tori-checkbox__box .tori-checkbox__dash {
+  display: block;
+}
+.tori-checkbox__input:disabled + .tori-checkbox__box {
+  opacity: 0.55;
+}
+.tori-checkbox-field {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.tori-checkbox-field--disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.tori-checkbox-field__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tori-checkbox-field__label {
+  font-size: 14px;
+  line-height: 1.3;
+  color: rgb(var(--tori-fg));
+}
+.tori-checkbox-field__description {
+  font-size: 13px;
+  color: rgb(var(--tori-muted));
+}
+
+/* ============================================================
+   Avatar
+   ============================================================ */
+.tori-avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--tori-radius-full);
+  background: rgb(var(--tori-primary) / 0.15);
+  color: rgb(var(--tori-primary));
+  font-weight: 600;
+  user-select: none;
+}
+.tori-avatar__image {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  display: block;
+}
+.tori-avatar--sm {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+.tori-avatar--md {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+.tori-avatar--lg {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+.tori-avatar--xl {
+  width: 56px;
+  height: 56px;
+  font-size: 18px;
+}
+.tori-avatar__status {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 27%;
+  height: 27%;
+  min-width: 9px;
+  min-height: 9px;
+  border-radius: var(--tori-radius-full);
+  border: 2px solid rgb(var(--tori-bg));
+}
+.tori-avatar__status--online {
+  background: rgb(var(--tori-success));
+}
+.tori-avatar__status--offline {
+  background: rgb(var(--tori-muted));
+}
+.tori-avatar__status--busy {
+  background: rgb(var(--tori-danger));
+}
+.tori-avatar__status--away {
+  background: rgb(var(--tori-warning));
+}
+
+/* ============================================================
+   Skeleton
+   ============================================================ */
+.tori-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgb(var(--tori-fg) / 0.08);
+  border-radius: var(--tori-radius-sm);
+}
+.tori-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(var(--tori-bg) / 0.5), transparent);
+  animation: tori-shimmer 1.6s ease-in-out infinite;
+}
+.tori-skeleton--text {
+  height: 1em;
+  width: 100%;
+}
+.tori-skeleton--rect {
+  height: 120px;
+  width: 100%;
+}
+.tori-skeleton--circle {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--tori-radius-full);
+}
+.tori-skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
