@@ -1,0 +1,52 @@
+# Drafts a GitHub Release whenever the package version changes on main.
+#
+# Flow: `pnpm changeset version` bumps packages/ui/package.json → merge/push
+# to main → this workflow creates a DRAFT release "v<version>" with
+# auto-generated notes. A human reviews and publishes the draft, which
+# creates the tag and fires publish.yml (Trusted Publishing → npm).
+#
+# Idempotent: skips when the tag or release already exists.
+name: Prepare Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - packages/ui/package.json
+
+permissions:
+  contents: write
+
+jobs:
+  draft-release:
+    name: Draft release for new version
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Read package version
+        id: version
+        run: echo "version=$(node -p "require('./packages/ui/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Create draft release if missing
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ steps.version.outputs.version }}
+        run: |
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists — nothing to do."
+            exit 0
+          fi
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG already exists — nothing to do."
+            exit 0
+          fi
+          gh release create "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --draft \
+            --generate-notes \
+            --title "$TAG" \
+            --target "$GITHUB_SHA"
+          echo "Drafted release $TAG at $GITHUB_SHA — review and publish it to ship to npm."

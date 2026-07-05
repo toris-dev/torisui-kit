@@ -1,0 +1,22 @@
+# Categories for auto-generated release notes (used by --generate-notes
+# and the "Generate release notes" button).
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+  categories:
+    - title: 🚀 Features
+      labels:
+        - feature
+        - enhancement
+    - title: 🐛 Fixes
+      labels:
+        - fix
+        - bug
+    - title: 📝 Documentation
+      labels:
+        - docs
+        - documentation
+    - title: 🧰 Maintenance
+      labels:
+        - '*'

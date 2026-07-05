@@ -94,3 +94,21 @@ During 0.x, breaking changes ship as minor (npm semver convention).
 - publish.yml failure: check the Actions log — gate failures mean fix code and
   re-publish the Release; OIDC failures mean re-check the Trusted Publisher
   fields (owner/repo/workflow filename/environment)
+
+## 6. Automated release drafts (prepare-release.yml)
+
+Tags and releases are not created by hand:
+
+```txt
+pnpm changeset version → push to main (packages/ui/package.json changes)
+  → prepare-release.yml drafts release "v<version>" with auto-generated notes
+  → you review the draft and click Publish
+  → publishing creates the tag and fires publish.yml (Trusted Publishing)
+  → you approve the npm environment → npm publish
+```
+
+- Notes are categorized by `.github/release.yml` (label PRs with
+  `feature` / `fix` / `docs`; everything else lands in Maintenance).
+- The workflow is idempotent — it skips when the tag or release already exists.
+- Two human checkpoints remain by design: publishing the draft release and
+  approving the `npm` environment deployment.
