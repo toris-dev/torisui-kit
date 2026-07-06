@@ -410,3 +410,58 @@ Semantic `<kbd>` keycap in the `--tori-font-mono` token font.
 
 Placeholder for empty lists / first-run. Presentational — the title is a real heading
 (`titleAs`), the icon is `aria-hidden`; the consumer owns any live-region announcement.
+
+## Popover
+
+```tsx
+<Popover>
+  <PopoverTrigger>Open</PopoverTrigger>
+  <PopoverContent side="bottom" align="center">
+    <p>Anchored, non-modal panel.</p>
+  </PopoverContent>
+</Popover>
+```
+
+- **Non-modal**: does not trap focus or lock scroll — Tab flows out through the DOM and
+  the page stays interactive (that's the difference from Dialog)
+- Anchored positioning flips near viewport edges; measured before the first paint
+  (no corner flash). `side`: `top | bottom | left | right`, `align`: `start | center | end`
+- Dismisses on Escape / outside pointerdown; focus returns to the trigger on close
+- Controlled (`open`/`onOpenChange`) or uncontrolled (`defaultOpen`); `asChild` trigger
+- Solid surface (not glass) so small controls stay legible over any background
+
+## DropdownMenu
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger>Actions</DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuLabel>Manage</DropdownMenuLabel>
+    <DropdownMenuItem onSelect={edit}>Edit</DropdownMenuItem>
+    <DropdownMenuItem onSelect={duplicate}>Duplicate</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem disabled onSelect={archive}>Archive</DropdownMenuItem>
+    <DropdownMenuItem onSelect={remove}>Delete</DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+- WAI-ARIA menu: `role="menu"`/`menuitem`, `aria-haspopup="menu"`, `aria-orientation`
+- Full keyboard: ↑/↓ roving (skips disabled, wraps), Home/End, **type-ahead**, Enter/Space
+  activate, Escape closes, Tab closes
+- Mouse hover and keyboard highlight share a single `:focus` state (background only,
+  no focus ring on items)
+- `onSelect` runs then the menu closes; disabled items are inert
+- Escape closes only this menu when nested inside a Dialog (shared layer stack); focus
+  returns to the trigger on close
+- Built on the same `useAnchoredPosition` + dismissable-layer primitives as Popover
+
+## Overlay primitives (advanced)
+
+Exported for building custom overlays (Combobox, HoverCard, …):
+
+- `useAnchoredPosition({ anchorRef, floatingRef, open, side, align })` — flip-aware
+  positioning with measure-then-reveal; `resolvePlacement(...)` is the pure, testable core
+- `useDismissableLayer({ open, onDismiss, refs })` — Escape / outside-click on the shared
+  layer stack (top-most layer wins; cooperates with Dialog)
+- `useFocusReturn(active)` — restore focus to the pre-open element on close

@@ -1510,3 +1510,78 @@
 .tori-empty-state__action {
   margin-top: 8px;
 }
+
+/* ============================================================
+   Popover
+   ============================================================ */
+.tori-popover {
+  z-index: var(--tori-z-popover);
+  min-width: 180px;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 12px 14px;
+  border-radius: var(--tori-radius-md);
+  /* Solid surface (not full glass) so small controls stay legible over any
+     background; glass reserved for Toast. */
+  background: rgb(var(--tori-surface-raised));
+  border: 1px solid var(--tori-glass-border);
+  box-shadow: var(--tori-shadow-lg);
+  color: rgb(var(--tori-fg));
+  font-size: 14px;
+  outline: none;
+  animation: tori-pop-in var(--tori-motion-normal) var(--tori-ease);
+}
+
+/* ============================================================
+   Dropdown Menu
+   ============================================================ */
+.tori-menu {
+  z-index: var(--tori-z-dropdown);
+  min-width: 180px;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 6px;
+  border-radius: var(--tori-radius-md);
+  background: rgb(var(--tori-surface-raised));
+  border: 1px solid var(--tori-glass-border);
+  box-shadow: var(--tori-shadow-lg);
+  color: rgb(var(--tori-fg));
+  outline: none;
+  animation: tori-pop-in var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--tori-radius-sm);
+  font-size: 14px;
+  line-height: 1.2;
+  color: rgb(var(--tori-fg));
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+/* Single highlight state shared by mouse (hover focuses the item) and
+   keyboard roving. Menu items use a background highlight only — no focus
+   ring — so opt them out of the global :where() ring. */
+.tori-menu__item:focus,
+.tori-menu__item:focus-visible {
+  background: rgb(var(--tori-primary) / 0.12);
+  box-shadow: none;
+  outline: none;
+}
+.tori-menu__item[data-disabled] {
+  color: rgb(var(--tori-muted));
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.tori-menu__separator {
+  height: 1px;
+  margin: 6px -6px;
+  background: rgb(var(--tori-border));
+}
+.tori-menu__label {
+  padding: 6px 10px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgb(var(--tori-muted));
+}

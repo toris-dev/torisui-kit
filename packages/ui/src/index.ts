@@ -146,6 +146,24 @@ export type {
 export { Tooltip } from './components/tooltip';
 export type { TooltipProps, TooltipPlacement } from './components/tooltip';
 
+export { Popover, PopoverTrigger, PopoverContent } from './components/popover';
+export type { PopoverProps, PopoverTriggerProps, PopoverContentProps } from './components/popover';
+
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from './components/dropdown-menu';
+export type {
+  DropdownMenuProps,
+  DropdownMenuTriggerProps,
+  DropdownMenuContentProps,
+  DropdownMenuItemProps,
+} from './components/dropdown-menu';
+
 // Primitives
 export { Slot, composeRefs } from './primitives/slot';
 export type { SlotProps } from './primitives/slot';
@@ -158,3 +176,18 @@ export type { VisuallyHiddenProps } from './primitives/visually-hidden';
 export { cx } from './utils/cx';
 export { useControllableState } from './hooks/use-controllable-state';
 export { useEscapeKey } from './hooks/use-escape-key';
+export { useFocusReturn } from './hooks/use-focus-return';
+export { useDismissableLayer } from './hooks/use-dismissable-layer';
+export {
+  useAnchoredPosition,
+  resolvePlacement,
+} from './hooks/use-anchored-position';
+export type {
+  Side,
+  Align,
+  Rect,
+  ViewportSize,
+  ResolvedPosition,
+  AnchoredPosition,
+  UseAnchoredPositionParams,
+} from './hooks/use-anchored-position';

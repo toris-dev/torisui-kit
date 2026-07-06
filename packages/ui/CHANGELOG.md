@@ -1,5 +1,24 @@
 # @toris-dev/ui
 
+## 0.4.0
+
+### Minor Changes
+
+- Add the floating-overlay foundation and its first two components (Batch 3b):
+  **Popover** (non-modal anchored panel) and **DropdownMenu** (WAI-ARIA menu with
+  roving focus, type-ahead, and keyboard activation). Brings the library to 30
+  components.
+
+  New reusable primitives, exported for building custom overlays (Combobox,
+  HoverCard, …): `useAnchoredPosition` (flip-aware positioning with a pure,
+  testable `resolvePlacement` core and measure-then-reveal to avoid a corner
+  flash), `useDismissableLayer` (Escape/outside-click on a shared layer stack),
+  and `useFocusReturn`.
+
+  Dialog's private layer bookkeeping is refactored onto the shared layer stack so
+  a dropdown opened inside a dialog closes only the dropdown on Escape and does not
+  disturb the dialog's body scroll lock.
+
 ## 0.3.0
 
 ### Minor Changes

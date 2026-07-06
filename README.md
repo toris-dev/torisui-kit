@@ -71,6 +71,8 @@ pnpm changeset                          # record a version bump / release note
 | Toast | ✅ | success/error/info/warning/promise, hover-pause, smart eviction |
 | Tabs | ✅ | roving tabindex, arrow/Home/End keys, nested-safe |
 | Tooltip | ✅ | hover/focus, delay, placement, mounted only while open |
+| Popover | ✅ | non-modal anchored panel, flip positioning, focus return |
+| DropdownMenu | ✅ | WAI-ARIA menu, roving focus, type-ahead, layer-stack aware |
 | Pagination | ✅ | nav landmark, non-color current page, ellipsis collapsing |
 | Separator / Breadcrumb | ✅ | layout divider; composable navigation trail with `asChild` |
 | Kbd / EmptyState | ✅ | semantic keycap; empty/first-run placeholder with action slot |

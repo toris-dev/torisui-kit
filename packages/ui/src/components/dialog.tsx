@@ -2,16 +2,12 @@ import * as React from 'react';
 import { cx } from '../utils/cx';
 import { Portal } from '../primitives/portal';
 import { useEscapeKey } from '../hooks/use-escape-key';
+import { isTopLayer, lockScroll, pushLayer, removeLayer } from '../primitives/layer-stack';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-// Stacked-dialog bookkeeping: only the top-most dialog reacts to Escape,
-// and the body scroll lock is reference-counted so closing an inner
-// dialog doesn't unlock scrolling behind an outer one.
-const dialogStack: symbol[] = [];
-let scrollLockCount = 0;
-let previousBodyOverflow = '';
+let dialogSeq = 0;
 
 function getFocusable(panel: HTMLElement): HTMLElement[] {
   return Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
@@ -63,8 +59,8 @@ function DialogContent({
   className,
 }: DialogProps) {
   const panelRef = React.useRef<HTMLDivElement>(null);
-  const stackIdRef = React.useRef<symbol | null>(null);
-  if (stackIdRef.current === null) stackIdRef.current = Symbol('tori-dialog');
+  const stackIdRef = React.useRef<string | null>(null);
+  if (stackIdRef.current === null) stackIdRef.current = `tori-dialog-${++dialogSeq}`;
   const stackId = stackIdRef.current;
   const titleId = React.useId();
   const descriptionId = React.useId();
@@ -72,14 +68,10 @@ function DialogContent({
 
   const close = React.useCallback(() => onOpenChange?.(false), [onOpenChange]);
 
-  // Focus management + ref-counted scroll lock for the dialog's lifetime.
+  // Layer registration + focus management + ref-counted scroll lock.
   React.useEffect(() => {
-    dialogStack.push(stackId);
-    if (scrollLockCount === 0) {
-      previousBodyOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-    }
-    scrollLockCount++;
+    pushLayer(stackId);
+    const releaseScroll = lockScroll();
 
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const panel = panelRef.current;
@@ -87,19 +79,17 @@ function DialogContent({
     (autofocus ?? panel)?.focus();
 
     return () => {
-      const index = dialogStack.indexOf(stackId);
-      if (index !== -1) dialogStack.splice(index, 1);
-      scrollLockCount--;
-      if (scrollLockCount === 0) document.body.style.overflow = previousBodyOverflow;
+      removeLayer(stackId);
+      releaseScroll();
       previouslyFocused?.focus?.();
     };
   }, [stackId]);
 
-  // Escape closes only the top-most dialog and respects defaultPrevented
-  // (e.g. an open combobox inside the dialog handles Escape first).
+  // Escape closes only the top-most layer and respects defaultPrevented
+  // (e.g. an open dropdown inside the dialog handles Escape first).
   useEscapeKey(true, (event) => {
     if (event.defaultPrevented) return;
-    if (dialogStack[dialogStack.length - 1] !== stackId) return;
+    if (!isTopLayer(stackId)) return;
     close();
   });
 
