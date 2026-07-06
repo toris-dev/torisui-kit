@@ -57,15 +57,19 @@ pnpm changeset                          # record a version bump / release note
 | Card | ✅ | surface·glass·elevated; `interactive` is keyboard-accessible |
 | Input / Textarea | ✅ | shared field scaffolding: label, helper, error, full ARIA wiring |
 | Select | ✅ | styled native select, placeholder option, field scaffolding |
-| Checkbox | ✅ | native input underneath, indeterminate, description line |
+| Checkbox / RadioGroup | ✅ | native inputs, indeterminate, description line, arrow-key nav |
 | Badge | ✅ | solid·soft·outline·gradient × 6 tones, WCAG-checked foregrounds |
 | Avatar | ✅ | image with initials fallback, 4 sizes, status dot |
+| Alert | ✅ | info/success/warning/danger, default icons, dismissible |
+| Progress | ✅ | determinate + indeterminate, gradient fill, reduced-motion safe |
 | Spinner / Skeleton | ✅ | loading states; reduced-motion safe shimmer |
 | Switch | ✅ | controlled/uncontrolled, keyboard, `wrapperClassName` |
+| Accordion | ✅ | single/multiple disclosure, keyboard, region wiring |
 | Dialog | ✅ | focus trap, stacked-dialog Escape, ref-counted scroll lock |
 | Toast | ✅ | success/error/info/warning/promise, hover-pause, smart eviction |
 | Tabs | ✅ | roving tabindex, arrow/Home/End keys, nested-safe |
 | Tooltip | ✅ | hover/focus, delay, placement, mounted only while open |
+| Separator / Breadcrumb | ✅ | layout divider; composable navigation trail with `asChild` |
 
 ## Documentation
 
