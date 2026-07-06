@@ -19,20 +19,15 @@
 }
 
 /* Every interactive TorisUI element shares the same visible focus treatment.
+   A `:where()` universal rule (zero specificity) applies the ring to any
+   `tori-` class, so new interactive components are covered by default — no
+   per-component allowlist to forget. Opt an element out with
+   `.tori-x { --tori-no-focus-ring: 1 }` + its own :focus-visible rule.
    The transparent outline (instead of `outline: none`) keeps a focus
    indicator in Windows High Contrast / forced-colors mode, where
-   box-shadows are stripped and transparent outlines are repainted in the
-   system highlight color. */
-.tori-btn:focus-visible,
-.tori-input:focus-visible,
-.tori-switch:focus-visible,
-.tori-tabs__trigger:focus-visible,
-.tori-dialog__close:focus-visible,
-.tori-toast__close:focus-visible,
-.tori-alert__close:focus-visible,
-.tori-accordion__trigger:focus-visible,
-.tori-breadcrumb__link:focus-visible,
-.tori-card--interactive:focus-visible {
+   box-shadows are stripped and transparent outlines repaint in the system
+   highlight color. */
+:where([class^='tori-'], [class*=' tori-']):focus-visible {
   outline: 2px solid transparent;
   outline-offset: 2px;
   box-shadow: var(--tori-focus-ring);

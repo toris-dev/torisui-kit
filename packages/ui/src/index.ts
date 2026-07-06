@@ -46,6 +46,40 @@ export type { AlertProps, AlertTone } from './components/alert';
 export { Progress } from './components/progress';
 export type { ProgressProps, ProgressSize } from './components/progress';
 
+export { Slider } from './components/slider';
+export type { SliderProps, SliderSize } from './components/slider';
+
+export { Toggle } from './components/toggle';
+export type { ToggleProps, ToggleSize } from './components/toggle';
+
+export { ToggleGroup, ToggleGroupItem } from './components/toggle-group';
+export type {
+  ToggleGroupProps,
+  ToggleGroupSingleProps,
+  ToggleGroupMultipleProps,
+  ToggleGroupItemProps,
+} from './components/toggle-group';
+
+export { Kbd } from './components/kbd';
+export type { KbdProps } from './components/kbd';
+
+export { EmptyState } from './components/empty-state';
+export type { EmptyStateProps } from './components/empty-state';
+
+export {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from './components/collapsible';
+export type {
+  CollapsibleProps,
+  CollapsibleTriggerProps,
+  CollapsibleContentProps,
+} from './components/collapsible';
+
+export { Pagination } from './components/pagination';
+export type { PaginationProps } from './components/pagination';
+
 export { Spinner } from './components/spinner';
 export type { SpinnerProps } from './components/spinner';
 

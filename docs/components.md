@@ -335,3 +335,78 @@ the rule marks a meaningful grouping boundary.
 - `<nav aria-label="Breadcrumb">` landmark with an ordered list
 - `BreadcrumbLink` supports `asChild` for router links; `BreadcrumbPage` marks the
   current page (`aria-current="page"`); separators are `aria-hidden`
+
+## Slider
+
+```tsx
+<Slider defaultValue={40} min={0} max={100} step={5} label="Volume" onValueChange={setVol} />
+```
+
+- Single-thumb, built on native `<input type="range">` — keyboard, touch, and
+  `aria-valuenow` come from the platform
+- Controlled (`value`) or uncontrolled (`defaultValue`); filled track uses the brand gradient
+- `size`: `sm | md | lg`. Range/dual-thumb is a separate future component.
+
+## Toggle & ToggleGroup
+
+```tsx
+<Toggle pressed={bold} onPressedChange={setBold}>Bold</Toggle>
+
+<ToggleGroup type="single" defaultValue="left" aria-label="Align">
+  <ToggleGroupItem value="left">Left</ToggleGroupItem>
+  <ToggleGroupItem value="center">Center</ToggleGroupItem>
+  <ToggleGroupItem value="right">Right</ToggleGroupItem>
+</ToggleGroup>
+```
+
+- `Toggle`: two-state button (`aria-pressed`); pressed = filled gradient (not a faint
+  tint) and mapped to the system `Highlight` in forced-colors mode
+- `ToggleGroup`: `type="single"` (radio-like) or `type="multiple"`; arrow-key roving
+  focus with one tabstop (segmented-control pattern); `size` cascades to items
+
+## Collapsible
+
+```tsx
+<Collapsible defaultOpen>
+  <CollapsibleTrigger>Show details</CollapsibleTrigger>
+  <CollapsibleContent>Body content</CollapsibleContent>
+</Collapsible>
+```
+
+Single show/hide disclosure (standalone sibling of Accordion). `aria-expanded`/
+`aria-controls` wired, content is `role="region"`, controlled/uncontrolled, fade-in
+matching Accordion.
+
+## Pagination
+
+```tsx
+<Pagination page={page} count={20} siblingCount={1} onPageChange={setPage} />
+```
+
+- `<nav aria-label="Pagination">` landmark; current page carries both a filled
+  treatment and `aria-current="page"` (not color alone — WCAG 1.4.1)
+- Collapses long ranges with ellipses, always showing first + last; ellipses are
+  non-interactive; prev/next disable at the ends
+
+## Kbd
+
+```tsx
+<Kbd>⌘</Kbd> <Kbd>K</Kbd>
+```
+
+Semantic `<kbd>` keycap in the `--tori-font-mono` token font.
+
+## EmptyState
+
+```tsx
+<EmptyState
+  icon={<InboxIcon />}
+  title="No messages"
+  description="You're all caught up."
+  action={<Button>Refresh</Button>}
+  titleAs="h3"
+/>
+```
+
+Placeholder for empty lists / first-run. Presentational — the title is a real heading
+(`titleAs`), the icon is `aria-hidden`; the consumer owns any live-region announcement.
