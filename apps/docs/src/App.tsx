@@ -24,9 +24,18 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
   Dialog,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
   EmptyState,
   Input,
   Kbd,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Pagination,
   Progress,
   Radio,
@@ -313,6 +322,37 @@ function Showcase() {
           <Alert tone="danger" title="Build failed" onDismiss={() => toast.info('Alert dismissed.')}>
             Check the logs for details.
           </Alert>
+        </div>
+      </section>
+
+      <section>
+        <h2>Popover · DropdownMenu</h2>
+        <div className="playground__row">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">Open popover</Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <p style={{ margin: 0 }}>
+                A non-modal panel. The page stays interactive and Tab flows out.
+              </p>
+            </PopoverContent>
+          </Popover>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="soft">Actions ▾</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Manage</DropdownMenuLabel>
+              <DropdownMenuItem onSelect={() => toast.success('Edited')}>Edit</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => toast.info('Duplicated')}>
+                Duplicate
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem disabled>Archive (soon)</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => toast.error('Deleted')}>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </section>
 
