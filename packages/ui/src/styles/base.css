@@ -29,6 +29,9 @@
 .tori-tabs__trigger:focus-visible,
 .tori-dialog__close:focus-visible,
 .tori-toast__close:focus-visible,
+.tori-alert__close:focus-visible,
+.tori-accordion__trigger:focus-visible,
+.tori-breadcrumb__link:focus-visible,
 .tori-card--interactive:focus-visible {
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -67,6 +70,18 @@
   }
 }
 
+@keyframes tori-progress-indeterminate {
+  0% {
+    transform: translateX(-100%) scaleX(0.4);
+  }
+  50% {
+    transform: translateX(20%) scaleX(0.6);
+  }
+  100% {
+    transform: translateX(180%) scaleX(0.4);
+  }
+}
+
 @keyframes tori-slide-in-right {
   from {
     opacity: 0;
@@ -96,5 +111,13 @@
      stop the skeleton shimmer explicitly (a static block reads fine). */
   .tori-skeleton::after {
     animation: none !important;
+  }
+
+  /* Keep the indeterminate progress bar readable: a static partial fill
+     instead of a frozen sliver. */
+  .tori-progress--indeterminate .tori-progress__fill {
+    animation: none !important;
+    width: 40% !important;
+    transform: none !important;
   }
 }

@@ -1,7 +1,18 @@
 import * as React from 'react';
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Alert,
   Avatar,
   Badge,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
   Button,
   Card,
   CardContent,
@@ -11,7 +22,11 @@ import {
   Checkbox,
   Dialog,
   Input,
+  Progress,
+  Radio,
+  RadioGroup,
   Select,
+  Separator,
   Skeleton,
   Spinner,
   Switch,
@@ -175,6 +190,65 @@ function Showcase() {
           <TabsContent value="props">Props documentation (variant, size, …) goes here.</TabsContent>
           <TabsContent value="a11y">role=tablist/tab/tabpanel + roving tabindex.</TabsContent>
         </Tabs>
+      </section>
+
+      <section>
+        <h2>Accordion · RadioGroup</h2>
+        <div className="playground__grid">
+          <Accordion defaultValue="what">
+            <AccordionItem value="what">
+              <AccordionTrigger>What is TorisUI Kit?</AccordionTrigger>
+              <AccordionContent>
+                A modern, interactive React component library — soft-glass, dark-first, accessible.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="install">
+              <AccordionTrigger>How do I install it?</AccordionTrigger>
+              <AccordionContent>Run npm install @toris-dev/ui and import the styles.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="theme">
+              <AccordionTrigger>Can I re-brand it?</AccordionTrigger>
+              <AccordionContent>Override the --tori-* CSS variables in your own :root.</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+          <RadioGroup defaultValue="pro" aria-label="Plan">
+            <Radio value="free" label="Free" description="For personal projects" />
+            <Radio value="pro" label="Pro" description="For growing teams" />
+            <Radio value="team" label="Team" description="For organizations" />
+          </RadioGroup>
+        </div>
+      </section>
+
+      <section>
+        <h2>Progress · Alert · Separator · Breadcrumb</h2>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="#">Components</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Progress</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <Separator style={{ margin: '16px 0' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 420 }}>
+          <Progress value={72} label="Storage used" />
+          <Progress label="Syncing" />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
+          <Alert tone="info" title="Heads up">A new version of the docs is available.</Alert>
+          <Alert tone="success" title="Deployed">Your site is live at example.com.</Alert>
+          <Alert tone="warning" title="Approaching limit">You have used 90% of your quota.</Alert>
+          <Alert tone="danger" title="Build failed" onDismiss={() => toast.info('Alert dismissed.')}>
+            Check the logs for details.
+          </Alert>
+        </div>
       </section>
 
       <section>

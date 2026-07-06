@@ -926,3 +926,308 @@
   flex-direction: column;
   gap: 8px;
 }
+
+/* ============================================================
+   Accordion
+   ============================================================ */
+.tori-accordion {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgb(var(--tori-border));
+  border-radius: var(--tori-radius-md);
+  overflow: hidden;
+}
+.tori-accordion__item + .tori-accordion__item {
+  border-top: 1px solid rgb(var(--tori-border));
+}
+.tori-accordion__heading {
+  margin: 0;
+  font: inherit;
+}
+.tori-accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  color: rgb(var(--tori-fg));
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-accordion__trigger:hover:not(:disabled) {
+  background: rgb(var(--tori-fg) / 0.04);
+}
+.tori-accordion__trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.tori-accordion__chevron {
+  flex-shrink: 0;
+  color: rgb(var(--tori-muted));
+  transition: transform var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-accordion__trigger[data-state='open'] .tori-accordion__chevron {
+  transform: rotate(180deg);
+}
+.tori-accordion__content-inner {
+  padding: 0 16px 16px;
+  font-size: 14px;
+  color: rgb(var(--tori-fg));
+  animation: tori-fade-in var(--tori-motion-normal) var(--tori-ease);
+}
+
+/* ============================================================
+   Radio Group
+   ============================================================ */
+.tori-radio-group {
+  display: flex;
+  gap: 10px;
+}
+.tori-radio-group--vertical {
+  flex-direction: column;
+}
+.tori-radio-group--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.tori-radio {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.tori-radio__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.tori-radio__input:disabled {
+  cursor: not-allowed;
+}
+.tori-radio__circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--tori-radius-full);
+  border: 1px solid rgb(var(--tori-border));
+  background: rgb(var(--tori-surface));
+  pointer-events: none;
+  transition:
+    border-color var(--tori-motion-normal) var(--tori-ease),
+    background-color var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-radio__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--tori-radius-full);
+  background: rgb(var(--tori-primary-fg));
+  transform: scale(0);
+  transition: transform var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-radio__input:hover:not(:disabled) + .tori-radio__circle {
+  border-color: rgb(var(--tori-primary) / 0.6);
+}
+.tori-radio__input:focus-visible + .tori-radio__circle {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--tori-focus-ring);
+}
+.tori-radio__input:checked + .tori-radio__circle {
+  border-color: transparent;
+  background: rgb(var(--tori-primary));
+}
+.tori-radio__input:checked + .tori-radio__circle .tori-radio__dot {
+  transform: scale(1);
+}
+.tori-radio__input:disabled + .tori-radio__circle {
+  opacity: 0.55;
+}
+.tori-radio-field {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+.tori-radio-field--disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.tori-radio-field__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tori-radio-field__label {
+  font-size: 14px;
+  line-height: 1.3;
+  color: rgb(var(--tori-fg));
+}
+.tori-radio-field__description {
+  font-size: 13px;
+  color: rgb(var(--tori-muted));
+}
+
+/* ============================================================
+   Progress
+   ============================================================ */
+.tori-progress {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--tori-radius-full);
+  background: rgb(var(--tori-fg) / 0.1);
+}
+.tori-progress--sm {
+  height: 4px;
+}
+.tori-progress--md {
+  height: 8px;
+}
+.tori-progress--lg {
+  height: 12px;
+}
+.tori-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--tori-gradient-primary);
+  transition: width var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-progress--indeterminate .tori-progress__fill {
+  width: 40%;
+  transform-origin: left center;
+  animation: tori-progress-indeterminate 1.4s ease-in-out infinite;
+  transition: none;
+}
+
+/* ============================================================
+   Alert
+   ============================================================ */
+.tori-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--tori-radius-md);
+  border: 1px solid rgb(var(--tori-alert-color) / 0.3);
+  background: rgb(var(--tori-alert-color) / 0.1);
+  color: rgb(var(--tori-fg));
+  --tori-alert-color: var(--tori-info);
+}
+.tori-alert--info {
+  --tori-alert-color: var(--tori-info);
+}
+.tori-alert--success {
+  --tori-alert-color: var(--tori-success);
+}
+.tori-alert--warning {
+  --tori-alert-color: var(--tori-warning);
+}
+.tori-alert--danger {
+  --tori-alert-color: var(--tori-danger);
+}
+.tori-alert__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: rgb(var(--tori-alert-color));
+}
+.tori-alert__content {
+  flex: 1;
+  min-width: 0;
+}
+.tori-alert__title {
+  font-size: 14px;
+  font-weight: 600;
+}
+.tori-alert__description {
+  font-size: 13px;
+  color: rgb(var(--tori-muted));
+}
+.tori-alert__title + .tori-alert__description {
+  margin-top: 2px;
+}
+.tori-alert__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin: -2px -4px -2px 0;
+  border: none;
+  background: transparent;
+  color: rgb(var(--tori-muted));
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--tori-radius-sm);
+}
+.tori-alert__close:hover {
+  color: rgb(var(--tori-fg));
+}
+
+/* ============================================================
+   Separator
+   ============================================================ */
+.tori-separator {
+  flex-shrink: 0;
+  background: rgb(var(--tori-border));
+}
+.tori-separator--horizontal {
+  width: 100%;
+  height: 1px;
+}
+.tori-separator--vertical {
+  width: 1px;
+  height: 100%;
+  min-height: 1em;
+  align-self: stretch;
+}
+
+/* ============================================================
+   Breadcrumb
+   ============================================================ */
+.tori-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+.tori-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+}
+.tori-breadcrumb__link {
+  color: rgb(var(--tori-muted));
+  text-decoration: none;
+  border-radius: var(--tori-radius-sm);
+  transition: color var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-breadcrumb__link:hover {
+  color: rgb(var(--tori-fg));
+}
+.tori-breadcrumb__page {
+  color: rgb(var(--tori-fg));
+  font-weight: 600;
+}
+.tori-breadcrumb__separator {
+  display: inline-flex;
+  align-items: center;
+  color: rgb(var(--tori-muted) / 0.7);
+}

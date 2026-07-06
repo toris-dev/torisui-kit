@@ -243,3 +243,95 @@ and the `tori-input` visual style; `resize: vertical`, height driven by `rows`.
 - Purely decorative (`aria-hidden`) — announce loading state via `Spinner` or a live region
 - `variant="text"` with `lines` renders a stack with a shorter last line
 - Shimmer stops under `prefers-reduced-motion` (static block remains)
+
+## Accordion
+
+```tsx
+<Accordion defaultValue="a">           {/* single (default); collapsible */}
+  <AccordionItem value="a">
+    <AccordionTrigger>Section A</AccordionTrigger>
+    <AccordionContent>Panel A content</AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="b">
+    <AccordionTrigger>Section B</AccordionTrigger>
+    <AccordionContent>Panel B content</AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+<Accordion type="multiple">…</Accordion>  {/* any number open */}
+```
+
+- `type="single"` (default) keeps one item open; `collapsible={false}` forces one always open
+- `type="multiple"` allows several open at once
+- Controlled via `value`/`onValueChange` (string for single, string[] for multiple)
+- `AccordionTrigger` is a real button inside an `<h3>`; panels are `role="region"`
+  wired with `aria-controls`/`aria-labelledby`
+
+## RadioGroup
+
+```tsx
+<RadioGroup defaultValue="pro" onValueChange={setPlan}>
+  <Radio value="free" label="Free" />
+  <Radio value="pro" label="Pro" description="Best value" />
+  <Radio value="team" label="Team" />
+</RadioGroup>
+```
+
+- Built on native `<input type="radio">` — arrow-key navigation, form submission,
+  and screen-reader semantics come from the platform; wrapped in `role="radiogroup"`
+- Controlled (`value`) or uncontrolled (`defaultValue`); `name` auto-generated if omitted
+- `orientation`: `vertical | horizontal`; `disabled` cascades to every radio
+
+## Progress
+
+```tsx
+<Progress value={64} label="Uploading" />
+<Progress label="Loading" />          {/* indeterminate — omit value */}
+```
+
+- `role="progressbar"` with `aria-valuenow/min/max`; `value` clamped to `[0, max]`
+- Omit `value` (or pass `null`) for a looping indeterminate bar (static fill under reduced motion)
+- `size`: `sm | md | lg`; gradient fill
+
+## Alert
+
+```tsx
+<Alert tone="success" title="Saved" onDismiss={() => …}>
+  Your changes are live.
+</Alert>
+```
+
+- `tone`: `info | success | warning | danger` — `danger`/`warning` announce via
+  `role="alert"`, `info`/`success` via `role="status"`
+- Default tone icon; pass a custom `icon` or `icon={false}` to hide it
+- `onDismiss` renders a close button
+
+## Separator
+
+```tsx
+<Separator />                              {/* decorative, role="none" */}
+<Separator decorative={false} orientation="vertical" />
+```
+
+Decorative by default (hidden from assistive tech). Set `decorative={false}` when
+the rule marks a meaningful grouping boundary.
+
+## Breadcrumb
+
+```tsx
+<Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/">Home</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Components</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+```
+
+- `<nav aria-label="Breadcrumb">` landmark with an ordered list
+- `BreadcrumbLink` supports `asChild` for router links; `BreadcrumbPage` marks the
+  current page (`aria-current="page"`); separators are `aria-hidden`
