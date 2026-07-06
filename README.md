@@ -58,18 +58,22 @@ pnpm changeset                          # record a version bump / release note
 | Input / Textarea | ✅ | shared field scaffolding: label, helper, error, full ARIA wiring |
 | Select | ✅ | styled native select, placeholder option, field scaffolding |
 | Checkbox / RadioGroup | ✅ | native inputs, indeterminate, description line, arrow-key nav |
+| Slider | ✅ | single-thumb native range, gradient fill, keyboard/touch |
+| Toggle / ToggleGroup | ✅ | aria-pressed, single/multiple, roving focus, forced-colors safe |
 | Badge | ✅ | solid·soft·outline·gradient × 6 tones, WCAG-checked foregrounds |
 | Avatar | ✅ | image with initials fallback, 4 sizes, status dot |
 | Alert | ✅ | info/success/warning/danger, default icons, dismissible |
 | Progress | ✅ | determinate + indeterminate, gradient fill, reduced-motion safe |
 | Spinner / Skeleton | ✅ | loading states; reduced-motion safe shimmer |
 | Switch | ✅ | controlled/uncontrolled, keyboard, `wrapperClassName` |
-| Accordion | ✅ | single/multiple disclosure, keyboard, region wiring |
+| Accordion / Collapsible | ✅ | multi/single-item and standalone disclosure, region wiring |
 | Dialog | ✅ | focus trap, stacked-dialog Escape, ref-counted scroll lock |
 | Toast | ✅ | success/error/info/warning/promise, hover-pause, smart eviction |
 | Tabs | ✅ | roving tabindex, arrow/Home/End keys, nested-safe |
 | Tooltip | ✅ | hover/focus, delay, placement, mounted only while open |
+| Pagination | ✅ | nav landmark, non-color current page, ellipsis collapsing |
 | Separator / Breadcrumb | ✅ | layout divider; composable navigation trail with `asChild` |
+| Kbd / EmptyState | ✅ | semantic keycap; empty/first-run placeholder with action slot |
 
 ## Documentation
 

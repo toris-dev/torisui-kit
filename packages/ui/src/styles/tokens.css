@@ -63,6 +63,16 @@
   --tori-font-sans:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans KR',
     'Apple SD Gothic Neo', sans-serif;
+  --tori-font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  /* z-index scale — overlays stack in this order (higher wins) */
+  --tori-z-dropdown: 65;
+  --tori-z-dialog: 60;
+  --tori-z-popover: 66;
+  --tori-z-toast: 70;
+  --tori-z-tooltip: 80;
 
   /* focus */
   --tori-focus-ring: 0 0 0 2px rgb(var(--tori-bg)), 0 0 0 4px rgb(var(--tori-primary) / 0.75);

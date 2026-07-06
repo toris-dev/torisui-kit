@@ -20,14 +20,21 @@ import {
   CardHeader,
   CardTitle,
   Checkbox,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   Dialog,
+  EmptyState,
   Input,
+  Kbd,
+  Pagination,
   Progress,
   Radio,
   RadioGroup,
   Select,
   Separator,
   Skeleton,
+  Slider,
   Spinner,
   Switch,
   Tabs,
@@ -35,6 +42,9 @@ import {
   TabsList,
   TabsTrigger,
   Textarea,
+  Toggle,
+  ToggleGroup,
+  ToggleGroupItem,
   Tooltip,
   ToriProvider,
   useTheme,
@@ -51,6 +61,21 @@ function ThemeToggle() {
       label={dark ? 'Dark' : 'Light'}
     />
   );
+}
+
+function SliderDemo() {
+  const [value, setValue] = React.useState(40);
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <span style={{ fontSize: 13 }}>Volume: {value}</span>
+      <Slider value={value} onValueChange={setValue} label="Volume" />
+    </label>
+  );
+}
+
+function PaginationDemo() {
+  const [page, setPage] = React.useState(4);
+  return <Pagination page={page} count={12} onPageChange={setPage} />;
 }
 
 function Showcase() {
@@ -175,6 +200,46 @@ function Showcase() {
             <Checkbox label="Select all" indeterminate />
             <Checkbox label="Disabled" disabled />
           </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Slider · Toggle · Pagination</h2>
+        <div className="playground__grid">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <SliderDemo />
+            <div className="playground__row">
+              <Toggle defaultPressed>Bold</Toggle>
+              <ToggleGroup type="single" defaultValue="center" aria-label="Align">
+                <ToggleGroupItem value="left">Left</ToggleGroupItem>
+                <ToggleGroupItem value="center">Center</ToggleGroupItem>
+                <ToggleGroupItem value="right">Right</ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+            <div className="playground__row">
+              <span>Press</span> <Kbd>⌘</Kbd> <Kbd>K</Kbd> <span>to search</span>
+            </div>
+          </div>
+          <PaginationDemo />
+        </div>
+      </section>
+
+      <section>
+        <h2>Collapsible · EmptyState</h2>
+        <div className="playground__grid">
+          <Collapsible defaultOpen>
+            <CollapsibleTrigger>▸ What's included?</CollapsibleTrigger>
+            <CollapsibleContent>
+              28 components, dark mode, zero runtime dependencies, full keyboard a11y.
+            </CollapsibleContent>
+          </Collapsible>
+          <Card>
+            <EmptyState
+              title="No projects yet"
+              description="Create your first project to get started."
+              action={<Button variant="glow">New project</Button>}
+            />
+          </Card>
         </div>
       </section>
 
