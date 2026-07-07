@@ -23,6 +23,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  AspectRatio,
   Dialog,
   DropdownMenu,
   DropdownMenuContent,
@@ -31,8 +32,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   EmptyState,
+  HoverCard,
   Input,
   Kbd,
+  Label,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -40,12 +43,20 @@ import {
   Progress,
   Radio,
   RadioGroup,
+  Rating,
   Select,
   Separator,
+  Sheet,
   Skeleton,
   Slider,
   Spinner,
   Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
   Tabs,
   TabsContent,
   TabsList,
@@ -90,6 +101,8 @@ function PaginationDemo() {
 function Showcase() {
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [sheetOpen, setSheetOpen] = React.useState(false);
+  const [rating, setRating] = React.useState(4);
   const [email, setEmail] = React.useState('');
   const emailError =
     email.length > 0 && !email.includes('@') ? 'Please enter a valid email address.' : undefined;
@@ -353,6 +366,85 @@ function Showcase() {
               <DropdownMenuItem onSelect={() => toast.error('Deleted')}>Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <HoverCard
+            content={
+              <div>
+                <strong>@toris</strong>
+                <p style={{ margin: '4px 0 0', color: 'rgb(var(--tori-muted))' }}>
+                  Building TorisUI Kit. Hover cards can hold rich, interactive content.
+                </p>
+              </div>
+            }
+          >
+            <Button variant="ghost">Hover for card</Button>
+          </HoverCard>
+          <Button variant="outline" onClick={() => setSheetOpen(true)}>
+            Open sheet
+          </Button>
+        </div>
+        <Sheet
+          open={sheetOpen}
+          onOpenChange={setSheetOpen}
+          side="right"
+          title="Filters"
+          description="Refine the results"
+          footer={
+            <Button variant="solid" onClick={() => setSheetOpen(false)}>
+              Apply
+            </Button>
+          }
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <Label htmlFor="q" required>
+              Query
+            </Label>
+            <Input id="q" placeholder="Search…" />
+          </div>
+        </Sheet>
+      </section>
+
+      <section>
+        <h2>Table · Rating · AspectRatio</h2>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Component</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead sort="ascending">Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell>Sheet</TableCell>
+              <TableCell>Overlay</TableCell>
+              <TableCell>Shipped</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>Rating</TableCell>
+              <TableCell>Form</TableCell>
+              <TableCell>Shipped</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <div className="playground__row" style={{ marginTop: 16 }}>
+          <Rating value={rating} onValueChange={setRating} label="Quality" />
+          <span style={{ fontSize: 13 }}>{rating} / 5</span>
+          <Rating value={5} readOnly size="sm" label="Fixed score" />
+        </div>
+        <div style={{ maxWidth: 280, marginTop: 16 }}>
+          <AspectRatio ratio={16 / 9}>
+            <div
+              style={{
+                display: 'grid',
+                placeItems: 'center',
+                background: 'var(--tori-gradient-primary)',
+                color: '#fff',
+                borderRadius: 'var(--tori-radius-md)',
+              }}
+            >
+              16 : 9
+            </div>
+          </AspectRatio>
         </div>
       </section>
 

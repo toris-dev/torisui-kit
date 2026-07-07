@@ -120,6 +120,33 @@ export type { SwitchProps } from './components/switch';
 export { Dialog } from './components/dialog';
 export type { DialogProps } from './components/dialog';
 
+export { Sheet } from './components/sheet';
+export type { SheetProps, SheetSide } from './components/sheet';
+
+export { HoverCard } from './components/hover-card';
+export type { HoverCardProps } from './components/hover-card';
+
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableCaption,
+} from './components/table';
+export type { TableProps, TableHeadProps } from './components/table';
+
+export { Label } from './components/label';
+export type { LabelProps } from './components/label';
+
+export { AspectRatio } from './components/aspect-ratio';
+export type { AspectRatioProps } from './components/aspect-ratio';
+
+export { Rating } from './components/rating';
+export type { RatingProps, RatingSize } from './components/rating';
+
 export {
   ToastProvider,
   useToast,

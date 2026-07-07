@@ -465,3 +465,80 @@ Exported for building custom overlays (Combobox, HoverCard, …):
 - `useDismissableLayer({ open, onDismiss, refs })` — Escape / outside-click on the shared
   layer stack (top-most layer wins; cooperates with Dialog)
 - `useFocusReturn(active)` — restore focus to the pre-open element on close
+
+## Sheet
+
+```tsx
+<Sheet open={open} onOpenChange={setOpen} side="right" title="Filters">
+  Sheet body
+</Sheet>
+```
+
+Modal edge panel (drawer). Shares Dialog's modal behavior — focus trap, ref-counted
+scroll lock, top-most-layer Escape — via the shared layer stack. `side`:
+`top | right | bottom | left`. Escape / overlay click / close button all call `onOpenChange(false)`.
+
+## HoverCard
+
+```tsx
+<HoverCard content={<UserSummary />} openDelay={300}>
+  <a href="/u/toris">@toris</a>
+</HoverCard>
+```
+
+Non-modal card revealed on hover/focus (richer than Tooltip, pointer-interactive — you
+can move into it). Flips near viewport edges via `useAnchoredPosition`. `openDelay` /
+`closeDelay` in ms; the trigger gets `aria-describedby` while open.
+
+## Table
+
+```tsx
+<Table>
+  <TableCaption>Invoices</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Name</TableHead>
+      <TableHead sort="ascending">Amount</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Acme</TableCell>
+      <TableCell>$100</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+Semantic `<table>` in a horizontal scroll container. `TableHead` sets `scope="col"` and
+accepts `sort` (→ `aria-sort`). Composable: Header/Body/Footer/Row/Head/Cell/Caption.
+
+## Label
+
+```tsx
+<Label htmlFor="email" required>Email</Label>
+<Input id="email" />
+```
+
+Accessible `<label>`; `required` appends a decorative `*`.
+
+## AspectRatio
+
+```tsx
+<AspectRatio ratio={16 / 9}>
+  <img src="/cover.jpg" alt="" />
+</AspectRatio>
+```
+
+Constrains content to a fixed width-to-height ratio (default 16:9).
+
+## Rating
+
+```tsx
+<Rating value={value} onValueChange={setValue} max={5} label="Quality" />
+<Rating value={4} readOnly label="Score" />
+```
+
+- Interactive mode is a `radiogroup` of stars: click to set, ←/→/↑/↓ + Home/End to adjust,
+  click the current value to clear; hovering previews without committing
+- `readOnly` renders a labelled `img`; `disabled` is inert; `size`: `sm | md | lg`
