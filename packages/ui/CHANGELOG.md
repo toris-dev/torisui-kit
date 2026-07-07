@@ -1,5 +1,19 @@
 # @toris-dev/ui
 
+## 0.5.0
+
+### Minor Changes
+
+- Add six more components (30 → 36): **Sheet** (modal edge drawer, reuses the shared
+  layer stack), **HoverCard** (hover/focus card on the anchored-positioning
+  primitive), **Table** (composable semantic table suite with `aria-sort`),
+  **Label** (accessible form label), **AspectRatio** (fixed ratio box), and
+  **Rating** (star radiogroup with keyboard, hover preview, and read-only mode).
+
+  Test coverage expanded 138 → 169: full suites for the new components plus
+  supplementary edge-case tests for Badge, Card, IconButton, Button, Breadcrumb,
+  Tabs, Progress, and Switch.
+
 ## 0.4.0
 
 ### Minor Changes

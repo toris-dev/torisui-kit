@@ -77,6 +77,11 @@
   }
 }
 
+@keyframes tori-sheet-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes tori-sheet-in-left { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes tori-sheet-in-top { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes tori-sheet-in-bottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
 @keyframes tori-slide-in-right {
   from {
     opacity: 0;

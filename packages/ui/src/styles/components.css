@@ -1585,3 +1585,242 @@
   font-weight: 600;
   color: rgb(var(--tori-muted));
 }
+
+/* ============================================================
+   Table
+   ============================================================ */
+.tori-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--tori-radius-md);
+  border: 1px solid rgb(var(--tori-border));
+}
+.tori-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: rgb(var(--tori-fg));
+}
+.tori-table__caption {
+  padding: 10px 14px;
+  font-size: 13px;
+  color: rgb(var(--tori-muted));
+  text-align: left;
+}
+.tori-table__head {
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  color: rgb(var(--tori-muted));
+  border-bottom: 1px solid rgb(var(--tori-border));
+  background: rgb(var(--tori-fg) / 0.03);
+  white-space: nowrap;
+}
+.tori-table__cell {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgb(var(--tori-border) / 0.6);
+}
+.tori-table__body .tori-table__row:last-child .tori-table__cell {
+  border-bottom: none;
+}
+.tori-table__body .tori-table__row:hover {
+  background: rgb(var(--tori-fg) / 0.03);
+}
+.tori-table__footer {
+  font-weight: 600;
+}
+.tori-table__footer .tori-table__cell {
+  border-top: 1px solid rgb(var(--tori-border));
+  border-bottom: none;
+}
+
+/* ============================================================
+   Label
+   ============================================================ */
+.tori-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(var(--tori-fg));
+}
+.tori-label__required {
+  color: rgb(var(--tori-danger));
+}
+
+/* ============================================================
+   Aspect Ratio
+   ============================================================ */
+.tori-aspect-ratio {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.tori-aspect-ratio > * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   Rating
+   ============================================================ */
+.tori-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: rgb(var(--tori-warning));
+  border-radius: var(--tori-radius-sm);
+}
+.tori-rating--sm {
+  font-size: 16px;
+}
+.tori-rating--md {
+  font-size: 22px;
+}
+.tori-rating--lg {
+  font-size: 30px;
+}
+.tori-rating__star {
+  display: inline-flex;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  line-height: 0;
+}
+button.tori-rating__star {
+  cursor: pointer;
+  transition: transform var(--tori-motion-fast) var(--tori-ease);
+}
+button.tori-rating__star:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+.tori-rating__star svg {
+  color: rgb(var(--tori-muted) / 0.4);
+}
+.tori-rating__star[data-filled] svg {
+  color: rgb(var(--tori-warning));
+}
+.tori-rating--disabled {
+  opacity: 0.55;
+}
+.tori-rating--disabled button.tori-rating__star {
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   Sheet (drawer)
+   ============================================================ */
+.tori-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--tori-z-dialog);
+  background: rgb(0 0 0 / 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: tori-fade-in var(--tori-motion-normal) var(--tori-ease);
+}
+.tori-sheet {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  background: rgb(var(--tori-surface-raised));
+  color: rgb(var(--tori-fg));
+  box-shadow: var(--tori-shadow-lg);
+  padding: 24px;
+  outline: none;
+}
+.tori-sheet--right,
+.tori-sheet--left {
+  top: 0;
+  bottom: 0;
+  width: min(400px, 100vw);
+}
+.tori-sheet--right {
+  right: 0;
+  border-left: 1px solid var(--tori-glass-border);
+  animation: tori-sheet-in-right var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-sheet--left {
+  left: 0;
+  border-right: 1px solid var(--tori-glass-border);
+  animation: tori-sheet-in-left var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-sheet--top,
+.tori-sheet--bottom {
+  left: 0;
+  right: 0;
+  height: min(320px, 100vh);
+}
+.tori-sheet--top {
+  top: 0;
+  border-bottom: 1px solid var(--tori-glass-border);
+  animation: tori-sheet-in-top var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-sheet--bottom {
+  bottom: 0;
+  border-top: 1px solid var(--tori-glass-border);
+  animation: tori-sheet-in-bottom var(--tori-motion-slow) var(--tori-ease);
+}
+.tori-sheet__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--tori-radius-sm);
+  background: transparent;
+  color: rgb(var(--tori-muted));
+  font-size: 18px;
+  cursor: pointer;
+}
+.tori-sheet__close:hover {
+  background: rgb(var(--tori-fg) / 0.08);
+  color: rgb(var(--tori-fg));
+}
+.tori-sheet__title {
+  margin: 0 32px 4px 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.tori-sheet__description {
+  margin: 0;
+  font-size: 14px;
+  color: rgb(var(--tori-muted));
+}
+.tori-sheet__body {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 16px;
+  font-size: 14px;
+}
+.tori-sheet__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+/* ============================================================
+   Hover Card
+   ============================================================ */
+.tori-hovercard {
+  z-index: var(--tori-z-popover);
+  min-width: 200px;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 14px;
+  border-radius: var(--tori-radius-md);
+  background: rgb(var(--tori-surface-raised));
+  border: 1px solid var(--tori-glass-border);
+  box-shadow: var(--tori-shadow-lg);
+  color: rgb(var(--tori-fg));
+  font-size: 14px;
+  animation: tori-pop-in var(--tori-motion-normal) var(--tori-ease);
+}

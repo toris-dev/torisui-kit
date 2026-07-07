@@ -67,11 +67,14 @@ pnpm changeset                          # record a version bump / release note
 | Spinner / Skeleton | ✅ | loading states; reduced-motion safe shimmer |
 | Switch | ✅ | controlled/uncontrolled, keyboard, `wrapperClassName` |
 | Accordion / Collapsible | ✅ | multi/single-item and standalone disclosure, region wiring |
-| Dialog | ✅ | focus trap, stacked-dialog Escape, ref-counted scroll lock |
+| Dialog / Sheet | ✅ | modal center dialog and edge drawer, focus trap, ref-counted scroll lock |
+| Popover / HoverCard | ✅ | non-modal anchored panel; hover/focus card, flip positioning |
+| Table | ✅ | composable semantic table suite, `aria-sort` |
+| Rating | ✅ | star radiogroup, keyboard, hover preview, read-only |
+| Label / AspectRatio | ✅ | accessible form label; fixed-ratio box |
 | Toast | ✅ | success/error/info/warning/promise, hover-pause, smart eviction |
 | Tabs | ✅ | roving tabindex, arrow/Home/End keys, nested-safe |
 | Tooltip | ✅ | hover/focus, delay, placement, mounted only while open |
-| Popover | ✅ | non-modal anchored panel, flip positioning, focus return |
 | DropdownMenu | ✅ | WAI-ARIA menu, roving focus, type-ahead, layer-stack aware |
 | Pagination | ✅ | nav landmark, non-color current page, ellipsis collapsing |
 | Separator / Breadcrumb | ✅ | layout divider; composable navigation trail with `asChild` |
